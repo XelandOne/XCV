@@ -1,6 +1,8 @@
 # XCV
 This repository contains the code of a student project for an offer generation software for software projects. It is written by Vanessa Hartl, Daniel Dieterle, Nils Knof, Thomas Schmitz, Thomas Wagner and Alexander Meiners.
 
+A docker container can be created by executing [docker-compose.yml](./docker-compose.yml) to test the software.
+
 # Offer Management
 A core feature of the software is the generation of offers with required skills for a project. Suitable employees can be found by searching for the required skills. Only sales staff has access to these features.
 
