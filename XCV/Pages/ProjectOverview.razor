@@ -1,0 +1,148 @@
+﻿@page "/projectOverview"
+@page "/projectOverview/{Failed:bool}"
+@using XCV.Entities.Enums
+@using XCV.Services
+
+@inject ProjectManager _projectManager
+@inject ExperienceManager _experienceManager
+@inject NavigationManager _navigationManager
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesAndAdminRolesString()" Context="author_context">
+    <Authorized>
+        @if (Failed)
+        {
+            <div class="alert alert-danger" role="alert">
+                Das Projekt, das sie bearbeiten wollten, existiert nicht mehr!
+            </div>
+        }
+        <div class="row">
+            <h2 class="col mt-1">Projekte</h2>
+            <span class="col">
+                <button type="button" @onclick="() => ModalAddProject()" class="btn btn-outline-secondary rounded-pill float-right">Projekt hinzufügen</button>
+            </span>
+        </div>
+        <hr>
+        @foreach (var project in Projects.OrderByDescending(x => x.LastChanged))
+        {
+            <div class="list-group">
+                <a href="projectdetail/@project.Id" class="list-group-item list-group-item-action flex-column align-items-start m-2">
+                    <div class="d-flex row justify-content-start">
+                        <h5 class="col-3">@project.Title</h5>
+                        <h6 class="col">Branche: @project.Field?.Name</h6>
+                        <button type="button" @onclick:preventDefault="true" class="close mr-3" @onclick="() => DeleteProject(project)">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div>
+                        @if (project.EndDate.HasValue)
+                        {
+                            <small>Zeitraum: @project.StartDate.ToShortDateString() - @project.EndDate.Value.ToShortDateString()</small>
+                        }
+                        else
+                        {
+                            <small>Ab: @project.StartDate.ToShortDateString()</small>
+                        }
+                    </div>
+                    <div class="d-flex border rounded my-2">
+                        <p class="mx-2 mt-2">@project.ProjectDescription</p>
+                    </div>
+                </a>
+            </div>
+        }
+        @if (_showAddProject && _current != null)
+        {
+            <EditForm Model="_current" OnValidSubmit="AddProject">
+                <DataAnnotationsValidator/>
+                <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5);">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Projekt anlegen</h4>
+                                <button type="button" @onclick="() => CloseModal()" class="close">&times</button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="justify-content-center">
+                                    <div class="card">
+                                        <div class="card-header">
+                                            <div class="row justify-content-center">
+                                                @if (_current != null)
+                                                {
+                                                    <InputText class="col-7 form-control rounded" placeholder="Projekttitel" @bind-Value="@_current.Title"/>
+                                                }
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <ValidationSummary/>
+                                            <div>
+                                                <div class="d-flex row justify-content-start">
+                                                    <h5 class="col-3">Laufzeit:</h5>
+                                                    @if (_current != null)
+                                                    {
+                                                        <InputDate class="col form-control rounded mr-1" placeholder="Startdatum" @bind-Value="@_current.StartDate"/>
+                                                        <InputDate class="col form-control rounded ml-1" placeholder="Enddatum" @bind-Value="@_current.EndDate"/>
+                                                    }
+                                                </div>
+                                                <br>
+                                                <div class="d-flex row justify-content-start">
+                                                    <h5 class="col-3">Branche:</h5>
+                                                    <InputSelect class="col form-select rounded custom-select" @bind-Value="FieldId">
+                                                        <option value="">Branche auswählen...</option>
+                                                        @foreach (var field in _experienceManager.Fields)
+                                                        {
+                                                            <option value="@field.Id">@field.Name</option>
+                                                        }
+                                                    </InputSelect>
+                                                </div>
+                                                <br>
+                                                <div class="d-flex row justify-content-start">
+                                                    <h5 class="col-3">Beschreibung:</h5>
+                                                    @if (_current != null)
+                                                    {
+                                                        <InputTextArea class="col form-control rounded" placeholder="Beschreibung" rows="3" @bind-Value="@_current.ProjectDescription"/>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </EditForm>
+        }
+        @if (_showCommitDelete && _current != null)
+        {
+            <div class="modal fade show" id="deleteModal" style="display:block" aria-modal="true" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger" id="exampleModalLabel">Achtung!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => _showCommitDelete = false">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <span>
+                                Wollen Sie das Projekt <br><b>@_current.Title</b> <br> wirklich löschen?
+                            </span>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="OnCommitDelete">
+                                <span aria-hidden="true">Löschen</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

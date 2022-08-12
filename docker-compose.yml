@@ -1,0 +1,31 @@
+﻿services:
+    mssql:
+        image: mcr.microsoft.com/azure-sql-edge:latest
+        volumes:
+            - events_mssql:/var/opt/mssql
+        ports:
+            - 1433:1433
+        environment:
+            - ACCEPT_EULA=1
+            - MSSQL_SA_PASSWORD=uFDjH%DU6E%3#JniG$$
+#        image: mcr.microsoft.com/mssql/server
+#        environment:
+#            MSSQL_HOST: mssql
+#            MSSQL_PID: Express
+#            ACCEPT_EULA: "Y"
+#            DB_HOST : "mssql"
+#            MSSQL_SA_PASSWORD: "uFDjH%DU6E%3#JniG$$"
+#            MSSQL_TCP_PORT: 1433
+#        ports:
+#            - "1433:1433"
+    web:
+        build: .
+        ports:
+            - 80:80
+        depends_on:
+            - mssql
+        links:
+            - mssql
+  
+volumes:
+    events_mssql:

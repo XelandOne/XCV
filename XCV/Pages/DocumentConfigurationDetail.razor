@@ -1,0 +1,182 @@
+@page "/OfferOverview/Offer/{OfferId:guid}/DocumentConfigurations/{ConfigurationId:guid}"
+@using XCV.Entities.Enums
+@using XCV.Services
+
+@inject OfferManager _offerManager
+@inject EmployeeManager _employeeManager
+@inject DocumentConfigurationManager _documentConfigurationManager
+@inject IDocumentGenerationService _documentGenerationService
+@inject NavigationManager _navigationManager
+
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+    <Authorized>
+        @if (Configuration != null)
+        {
+            <div class="row">
+                <span class="col-8 co1">
+                    <div class="row ">
+                        <h3 class="mt-1 ml-3">@Configuration.Title</h3>
+                            <button class="btn btn-outline-primary rounded-pill ml-3" data-toggle="modal" data-target="#ChangeTitleModal">Titel bearbeiten</button>
+                            <div class="modal fade" id="ChangeTitleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModal3Label">Dokumentenkonfigurationstitel ändern</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form>
+                                            <div class="mb-3">
+                                                <label for="newOffer" class="">Dokumentenkonfigurationstitel:</label>
+                                                <input class="form-control mb-2" type="text" id="newOffer" placeholder="Neuer Titel..." @bind="Title" @bind:event="oninput" @onkeydown="async (e) => await Enter(e)">
+                                            </div>
+                                        </form>
+                                        @if (Title != null && Title.Length > 100)
+                                        {
+                                            <p class="w">Der Titel darf nicht länger als 100 Zeichen sein!</p>
+                                        }
+                                        else if (Title != null && Title.Length == 0)
+                                        {
+                                            <p class="w">Bitte geben Sie einen Titel ein!</p>
+                                        }
+                                    </div>
+                                    <div class="modal-footer">
+                                        @if (Title != null && (Title.Length > 100 || Title.Length == 0))
+                                        {
+                                            <button type="button" class="btn btn-primary" disabled>Bestätigen</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                                        }
+                                        else
+                                        {
+                                            <button type="button" class="btn btn-primary" @onclick="() => ChangeTitle()" data-dismiss="modal">Bestätigen</button>
+                                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </span>
+                <span class="col-4">
+                    <div class="row justify-content-end">
+                        <button class="btn btn-outline-danger rounded-pill" @onclick="() => DeleteConfiguration()">Löschen</button>
+                        <button class="btn btn-outline-success rounded-pill ml-2 mr-3" @onclick="() => CopyConfiguration()">Kopieren</button>
+                    </div>
+                </span>
+            </div>
+            <hr>
+            <br>
+            <p>
+                <button type="button" @onclick="GenerateDocument" class="btn btn-outline-success btn-sm float-right">Dokumentengeneration</button>
+            </p>
+            <br>
+            <h4>Deckblatt</h4>
+            <div class="row ml-1">
+                <div class="btn-group btn-group-toggle ml-1" data-toggle="buttons">
+                    @if (Configuration.ShowCoverSheet)
+                    {
+                        <label class="btn btn-outline-dark active" for="CoverOption1" @onclick="() => SelectCoverSheet(true)">
+                            <input type="radio" name="CoverOptions" id="CoverOption1" checked> ja
+                        </label>
+                        <label class="btn btn-outline-dark" for="CoverOption2" @onclick="() => SelectCoverSheet(false)">
+                            <input type="radio" name="CoverOptions" id="CoverOption2"> nein
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="btn btn-outline-dark" for="CoverOption1" @onclick="() => SelectCoverSheet(true)">
+                            <input type="radio" name="CoverOptions" id="CoverOption1"> ja
+                        </label>
+                        <label class="btn btn-outline-dark active" for="CoverOption2" @onclick="() => SelectCoverSheet(false)">
+                            <input type="radio" name="CoverOptions" id="CoverOption2" checked> nein
+                        </label>
+                    }
+                </div>
+            </div>
+            <br>
+            <h4>Preiskalkulation</h4>
+            <div class="row ml-1">
+                <div class="btn-group btn-group-toggle ml-1" data-toggle="buttons">
+                    @if (Configuration.IncludePriceCalculation)
+                    {
+                        <label class="btn btn-outline-dark active" @onclick="() => SelectPriceCalculation(true)">
+                            <input type="radio" name="PriceCalculationOptions" id="PriceCalculationOption1" checked> ja
+                        </label>
+                        <label class="btn btn-outline-dark" @onclick="() => SelectPriceCalculation(false)">
+                            <input type="radio" name="PriceCalculationOptions" id="PriceCalculationOption2"> nein
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="btn btn-outline-dark" @onclick="() => SelectPriceCalculation(true)">
+                            <input type="radio" name="PriceCalculationOptions" id="PriceCalculationOption1"> ja
+                        </label>
+                        <label class="btn btn-outline-dark active" @onclick="() => SelectPriceCalculation(false)">
+                            <input type="radio" name="PriceCalculationOptions" id="PriceCalculationOption2" checked> nein
+                        </label>
+                    }
+                </div>
+            </div>
+            <br>
+            <h4>Benötigte Skills</h4>
+            <div class="row ml-1">
+                <div class="btn-group btn-group-toggle ml-1" data-toggle="buttons">
+                    @if (Configuration.ShowRequiredExperience)
+                    {
+                        <label class="btn btn-outline-dark active" @onclick="() => SelectRequiredExperience(true)">
+                            <input type="radio" name="RequiredExperienceOptions" id="RequiredExperienceOption1" checked> ja
+                        </label>
+                        <label class="btn btn-outline-dark" @onclick="() => SelectRequiredExperience(false)">
+                            <input type="radio" name="RequiredExperienceOptions" id="RequiredExperienceOption2"> nein
+                        </label>
+                    }
+                    else
+                    {
+                        <label class="btn btn-outline-dark" @onclick="() => SelectRequiredExperience(true)">
+                            <input type="radio" name="RequiredExperienceOptions" id="RequiredExperienceOption1"> ja
+                        </label>
+                        <label class="btn btn-outline-dark active" @onclick="() => SelectRequiredExperience(false)">
+                            <input type="radio" name="RequiredExperienceOptions" id="RequiredExperienceOption2" checked> nein
+                        </label>
+                    }
+                </div>
+            </div>
+            <br>
+            <h4>Mitarbeiter</h4>
+            @if (Offer != null)
+            {
+                @foreach (var employee in Offer.ShortEmployees)
+                {
+                    var emp = _employeeManager.GetEmployee(employee.EmployeeId);
+                    if (emp == null)
+                        continue;
+
+                    <div class="form-group row ml-1">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="EmployeeOption(@employee.EmployeeId)1" checked="@Configuration.ShownEmployeePropertyIds.Contains(employee.Id)" @onchange="@(eventArgs => ToggleEmployee(employee.Id, eventArgs.Value != null && (bool) eventArgs.Value))">
+                                <label class="form-check-label" for="EmployeeOption(@employee.EmployeeId)1">@emp.FirstName @emp.SurName</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        }
+        else
+        {
+            <div class="row">
+                <h3>Dokumentenkonfiguration</h3>
+            </div>
+            <hr>
+            <br>
+
+            <p>Leider kann Ihre Anfrage keiner existierenden Dokumentenkonfiguration zugeordnet werden.</p>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

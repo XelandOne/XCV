@@ -1,0 +1,358 @@
+﻿@page "/EmployeeSearch"
+@page "/EmployeeSearch/{Id:guid}"
+@using XCV.Entities.Enums
+@using XCV.Data
+@using XCV.Services
+
+@inject NavigationManager _navManager
+@inject SearchManager _searchManager
+@inject ExperienceManager _experienceManager
+@inject EmployeeManager _employeeManager
+@inject IJSRuntime _jsRuntime
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+<Authorized>
+<h2 class="mt-1">Mitarbeitersuche</h2>
+<hr>
+<br>
+<div class="container-fluid">
+<div class="row">
+<div class="col-sm-9 col-md-9 col-lg-8">
+    <div class="input-group w-100">
+        <div class="input-group-prepend">
+            <button class="btn btn-light dropdown-toggle b0" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">@Dropdown</button>
+            <div class="dropdown-menu">
+                @{
+                    string alles = "Alles";
+                    string mitarbeiter = "Mitarbeiter";
+                    string branchen = "Branchen";
+                    string rollen = "Rollen";
+                    string sprachen = "Sprachen";
+                    string softskills = "Soft Skills";
+                    string hardskills = "Hard Skills";
+                }
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = alles; }">Alles</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = mitarbeiter; }">Mitarbeiter</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = branchen; }">Branchen</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = rollen; }">Rollen</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = sprachen; }">Sprachen</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = softskills; }">Soft Skills</button>
+                <button class="dropdown-item" type="button" @onclick="() => { Dropdown = hardskills; }">Hard Skills</button>
+            </div>
+        </div>
+        <input type="text" class="form-control" placeholder="Auswahl der Suchkriterien..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+        <!--<div class="input-group-append">
+            <a class="btn btn-light" type="button" href="/Mitarbeitersuche/Ergebnis/@Id">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </a>
+        </div>-->
+        <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon1">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                </svg>
+            </span>
+        </div>
+    </div>
+    <div class="list-group w-100">
+        <div class="d-flex flex-column list-group-item a1">
+            @if (Dropdown == alles || Dropdown == mitarbeiter)
+            {
+                <h5>Mitarbeiter</h5>
+                @foreach (var employee in _employeeManager.Employees)
+                {
+                    Hid = !IsVisible(employee.FirstName + " " + employee.SurName);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@employee.UserName" @onchange="eventArgs => SelectEmployee(employee.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@employee.UserName">@employee.FirstName @employee.SurName</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Dropdown == alles)
+                {
+                    <div class="dropdown-divider"></div>
+                }
+            }
+            @if (Dropdown == alles || Dropdown == branchen)
+            {
+                <h5>Branchen</h5>
+                @foreach (var field in _experienceManager.Fields)
+                {
+                    Hid = !IsVisible(field.Name);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@field.Id.ToString()" @onchange="eventArgs => SelectExperience(field.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@field.Id.ToString()">@field.Name</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Dropdown == alles)
+                {
+                    <div class="dropdown-divider"></div>
+                }
+            }
+            @if (Dropdown == alles || Dropdown == rollen)
+            {
+                <h5>Rollen</h5>
+                @foreach (var role in _experienceManager.Roles)
+                {
+                    Hid = !IsVisible(role.Name);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@role.Id.ToString()" @onchange="eventArgs => SelectExperience(role.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@role.Id.ToString()">@role.Name</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Dropdown == alles)
+                {
+                    <div class="dropdown-divider"></div>
+                }
+            }
+            @if (Dropdown == alles || Dropdown == sprachen)
+            {
+                <h5>Sprachen</h5>
+                @foreach (var language in _experienceManager.Languages)
+                {
+                    Hid = !IsVisible(language.Name);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@language.Id.ToString()" @onchange="eventArgs => SelectExperience(language.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@language.Id.ToString()">@language.Name</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Dropdown == alles)
+                {
+                    <div class="dropdown-divider"></div>
+                }
+            }
+            @if (Dropdown == alles || Dropdown == softskills)
+            {
+                <h5>Soft Skills</h5>
+                @foreach (var softSkill in _experienceManager.SoftSkills)
+                {
+                    Hid = !IsVisible(softSkill.Name);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@softSkill.Id.ToString()" @onchange="eventArgs => SelectExperience(softSkill.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@softSkill.Id.ToString()">@softSkill.Name</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+                @if (Dropdown == alles)
+                {
+                    <div class="dropdown-divider"></div>
+                }
+            }
+            @if (Dropdown == alles || Dropdown == hardskills)
+            {
+                <h5>Hard Skills</h5>
+                @foreach (var hardSkill in _experienceManager.HardSkills)
+                {
+                    Hid = !IsVisible(hardSkill.Name);
+
+                    <div class="form-group row" hidden="@Hid">
+                        <div class="col">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="@hardSkill.Id.ToString()" @onchange="eventArgs => SelectExperience(hardSkill.Id, eventArgs.Value)">
+                                <label class="form-check-label" for="@hardSkill.Id.ToString()">@hardSkill.Name</label>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+    <br>
+
+    <h4>
+        <a class="badge badge-pill badge-dark b1" type="button" href="/EmployeeSearch/Results/@Id">
+            Mitarbeitersuche starten
+        </a>
+    </h4>
+</div>
+<div class="col-sm-3 col-md-3 col-lg-4">
+    <h4>
+        Suchkriterien
+    </h4>
+    <div class="row ml-1">
+        @foreach (var employee in _searchManager.SelectedEmployees.Where(employee => _employeeManager.Employees.Exists(x => x.Id.Equals(employee))))
+        {
+            string uncheck = "uncheck";
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_employeeManager.Employees.Find(x => x.Id.Equals(employee))!.FirstName) @(_employeeManager.Employees.Find(x => x.Id.Equals(employee))!.SurName)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, _employeeManager.Employees.Find(e => e.Id == employee)!.UserName); SelectEmployee(employee, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+    <div class="row ml-1">
+        @foreach (var field in _searchManager.SelectedExperience.Where(field => _experienceManager.Fields.Exists(x => x.Id.Equals(field))))
+        {
+            string uncheck = "uncheck";
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_experienceManager.Fields.Find(x => x.Id.Equals(field))!.Name)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, field.ToString()); SelectExperience(field, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+    <div class="row ml-1">
+        @foreach (var role in _searchManager.SelectedExperience.Where(role => _experienceManager.Roles.Exists(x => x.Id.Equals(role))))
+        {
+            string uncheck = "uncheck";
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_experienceManager.Roles.Find(x => x.Id.Equals(role))!.Name)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, role.ToString()); SelectExperience(role, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+    <div class="row ml-1">
+        @foreach (var language in _searchManager.SelectedExperience.Where(language => _experienceManager.Languages.Exists(x => x.Id.Equals(language))))
+        {
+            string uncheck = "uncheck";
+
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_experienceManager.Languages.Find(x => x.Id.Equals(language))!.Name)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, language.ToString()); SelectExperience(language, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+    <div class="row ml-1">
+        @foreach (var softSkill in _searchManager.SelectedExperience.Where(softSkill => _experienceManager.SoftSkills.Exists(x => x.Id.Equals(softSkill))))
+        {
+            string uncheck = "uncheck";
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_experienceManager.SoftSkills.Find(x => x.Id.Equals(softSkill))!.Name)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, softSkill.ToString()); SelectExperience(softSkill, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+    <div class="row ml-1">
+        @foreach (var hardSkill in _searchManager.SelectedExperience.Where(hardSkill => _experienceManager.HardSkills.Exists(x => x.Id.Equals(hardSkill))))
+        {
+            string uncheck = "uncheck";
+            <h4>
+                <span class="badge badge-pill badge-light mr-1 b2">
+                    @(_experienceManager.HardSkills.Find(x => x.Id.Equals(hardSkill))!.Name)
+                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, hardSkill.ToString()); SelectExperience(hardSkill, false);}">&#10006</button>
+                </span>
+            </h4>
+        }
+    </div>
+</div>
+</div>
+</div>
+<!--
+<div class="input-group w-75">
+    <div class="input-group-prepend">
+        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Alles</button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Alles</a>
+            <a class="dropdown-item" href="#">Mitarbeiter</a>
+            <a class="dropdown-item" href="#">Eigenschaften</a>
+        </div>
+    </div>
+    <input type="text" class="form-control" placeholder="Auswahl der Suchkriterien..." @bind="Filter" @bind:event="oninput" aria-label="" aria-describedby="basic-addon1">
+    <div class="input-group-append">
+        <button class="btn btn-primary" type="button">Suche starten</button>
+    </div>
+</div>
+<ul class="list-group w-75">
+    @foreach (var employee in _employeeManager.Employees)
+    {
+        if (!IsVisible(employee.FirstName + " " + employee.SurName)) continue;
+        <li class="list-group-item">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id=@employee.UserName>
+                <label class="form-check-label" for=@employee.UserName>@employee.FirstName @employee.SurName</label>
+            </div>
+        </li>
+    }
+    @foreach (var hardskill in _experienceManager.HardSkills)
+    {
+        if (!IsVisible(hardskill.Name)) continue;
+        <li class="list-group-item">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id=@hardskill.Name>
+                <label class="form-check-label" for=@hardskill.Name>@hardskill.Name</label>
+            </div>
+        </li>
+    }
+    
+    
+</ul>
+-->
+<br>
+<!--
+<div class="input-group w-75">
+    <div class="input-group-prepend">
+        <button class="btn btn-light dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Alles</button>
+        <div class="dropdown-menu">
+            <a class="dropdown-item" href="#">Alles</a>
+            <a class="dropdown-item" href="#">Mitarbeiter</a>
+            <a class="dropdown-item" href="#">Eigenschaften</a>
+        </div>
+    </div>
+    <input type="text" class="form-control" placeholder="Auswahl der Suchkriterien..." @bind="Filter" @bind:event="oninput" aria-label="" aria-describedby="basic-addon1">
+    <div class="input-group-append">
+        <a class="btn btn-light" type="button" href="/Mitarbeitersuche/Ergebnis">Suche starten</a>
+    </div>
+</div>
+<ul class="list-group w-75">
+    @foreach (var employee in _employeeManager.Employees)
+    {
+        Hid = !IsVisible(employee.FirstName + " " + employee.SurName);
+
+        <li class="list-group-item" hidden="@Hid">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id=@employee.UserName>
+                <label class="form-check-label" for=@employee.UserName>@employee.FirstName @employee.SurName</label>
+            </div>
+        </li>
+    }
+    @foreach (var hardskill in _experienceManager.HardSkills)
+    {
+        Hid = !IsVisible(hardskill.Name);
+
+        <li class="list-group-item" hidden="@Hid">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id=@hardskill.Name>
+                <label class="form-check-label" for=@hardskill.Name>@hardskill.Name</label>
+            </div>
+        </li>
+    }
+</ul>
+<br>-->
+</Authorized>
+<NotAuthorized>
+    <NoAuthorisation/>
+</NotAuthorized>
+</AuthorizeView>

@@ -1,0 +1,462 @@
+﻿@page "/employeeprofile/edit"
+@using XCV.Services
+@using XCV.Data
+@using XCV.Entities
+@using XCV.Entities.Enums
+@using DocumentFormat.OpenXml.Drawing
+
+@inject EmployeeManager _employeeManager
+@inject IEmployeeService _employeeService
+@inject NavigationManager _navigationManager
+@inject ExperienceManager _experienceManager
+@inject ProjectManager _projectManager
+
+<AuthorizeView>
+<Authorized>
+@if (CurrentEmployeeCopy != null)
+{
+    <EditForm Context="editcontext" Model="@CurrentEmployeeCopy" OnValidSubmit="OnValidSubmit">
+        <DataAnnotationsValidator/>
+        <div class="row">
+            <h2 class="col mt-1">Mitarbeiterprofil bearbeiten</h2>
+            <span class="col">
+                <button type="submit" class="float-right btn btn-outline-secondary rounded-pill">Bestätigen</button>
+            </span>
+        </div>
+        <hr>
+        <div class="row justify-content-center">
+            <div class="card w-50">
+                <div class="card-header text-center justify-content-center">
+                    @{
+                        string imgSrc;
+                        if (CurrentEmployeeCopy.ProfilePicture == null)
+                        {
+                            imgSrc = "/images/EmployeeImage.png";
+                        }
+                        else
+                        {
+                            var base64 = Convert.ToBase64String(CurrentEmployeeCopy.ProfilePicture);
+                            imgSrc = $"data:image;base64,{base64}";
+                        }
+                    }
+                    <div class="row justify-content-center">
+                        <img class="rounded w-25 p-2" src="@imgSrc" alt="Profilbild">
+                    </div>
+                    @if (CurrentEmployeeCopy.ProfilePicture != null)
+                    {
+                        <button type="button" class="btn btn-outline-secondary rounded-pill m-2" @onclick="RemoveProfileImage">Profilbild löschen</button>
+                    }
+                    <div class="row justify-content-center">
+                        <InputFile class="text-center m-2" OnChange="OnProfileImageUpload" accept="image/png, image/jpeg"/>
+                    </div>
+                    @if (_profileImageToLarge)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            Das Bild muss unter @MaxFileSizeMb MB groß sein
+                        </div>
+                    }
+                    <div class="row justify-content-center mx-4">
+                        <InputText class="form-control rounded-pill w-50 m-1" @bind-Value="CurrentEmployeeCopy.FirstName" placeholder="Vorname"/>
+                        <ValidationMessage For="@(() => CurrentEmployeeCopy.FirstName)"/>
+                        <InputText class="form-control rounded-pill w-50 m-1" @bind-Value="CurrentEmployeeCopy.SurName" placeholder="Nachname"/>
+                        <ValidationMessage For="@(() => CurrentEmployeeCopy.SurName)"/>
+                    </div>
+                    <br>
+                    <span class="badge badge-info rounded-pill mb-2">
+                        Rate-Card Level:
+                        <select class="btn-sm btn-outline-secondary rounded-pill" @bind="CurrentEmployeeCopy.RateCardLevel" required>
+                            @foreach (RateCardLevel level in Enum.GetValues(typeof(RateCardLevel)))
+                            {
+                                <option value="@level">@RateCardLevelHelper.ToFriendlyString(level)</option>
+                            }
+                        </select>
+                        <ValidationMessage For="@(() => CurrentEmployeeCopy.RateCardLevel)"/>
+                    </span>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <h5>Rollen:</h5>
+                        @foreach (var role in CurrentEmployeeCopy.Experience.Roles)
+                        {
+                            <span class="badge badge-light rounded-pill my-1 mr-1">
+                                <button type="button" @onclick="() => RemoveRole(role)" class="btn btn-sm rounded-pill">&times;</button>
+                                @role.Name
+                            </span>
+                        }
+                        <span class="badge badge-light rounded-pill my-1">
+                            <button type="button" @onclick="ModalAddRole" class="btn btn-sm rounded-pill">+</button>
+                        </span>
+                    </div>
+                    <br>
+                    <div>
+                        <h5>Sprachen:</h5>
+                        @foreach (var language in CurrentEmployeeCopy.Experience.Languages.OrderBy(l => l.Item1.Name))
+                        {
+                            <span class="badge badge-light rounded-pill my-1">
+                                <button type="button" class="btn btn-sm rounded-pill" @onclick="@(() => RemoveLanguage(language.Item1))">&times;</button>
+                                @language.Item1.Name
+                                <select class="btn-sm btn-outline-secondary rounded-pill" required value="@language.Item2" @onchange="@(args => _employeeManager.UpdateLanguage(CurrentEmployeeCopy, (language.Item1, Enum.Parse<LanguageLevel>(args.Value as string))))">
+                                    @foreach (LanguageLevel level in Enum.GetValues(typeof(LanguageLevel)))
+                                    {
+                                        <option value="@level">@LanguageLevelHelper.ToFriendlyString(level)</option>
+                                    }
+                                </select>
+                            </span>
+                        }
+                        <span class="badge badge-light rounded-pill my-1">
+                            <button type="button" @onclick="() => ModalAddLanguage()" class="btn btn-sm rounded-pill">+</button>
+                        </span>
+                    </div>
+                    <br>
+                    <h5>Relevante Berufserfahrung:</h5>
+                    <br>
+                    <div>
+                        <div class="row form-group">
+                            <label class="col-5" for="employedSinceInput">Angestellt bei dieser Firma seit:</label>
+                            <div class="col">
+                                <div class="row input-group">
+                                    <InputDate id="employedSinceInput" class="form-control" @bind-Value="CurrentEmployeeCopy.EmployedSince"/>
+                                </div>
+                                <ValidationMessage class="row form-text" For="@(() => CurrentEmployeeCopy.EmployedSince)"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-5" for="workExperienceInput">Jahre der Berufserfahrung vor dieser Firma:</label>
+                            <div class="col">
+                                <div class="row input-group">
+                                    <InputNumber id="workExperienceInput" class="form-control" @bind-Value="CurrentEmployeeCopy.WorkExperience" min="0" step="1" placeholder="Jahre Berufserfahrung"/>
+                                </div>
+                                <ValidationMessage class="row form-text" For="@(() => CurrentEmployeeCopy.WorkExperience)"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-5" for="scientificAssistantInput">Jahre als Wissenschaftlicher Mitarbeiter:</label>
+                            <div class="col">
+                                <div class="row input-group">
+                                    <InputNumber id="scientificAssistantInput" class="form-control" @bind-Value="CurrentEmployeeCopy.ScientificAssistant" min="0" step="1" placeholder="Jahre Wissenschaftlicher Mitarbeiter"/>
+                                </div>
+                                <ValidationMessage class="row form-text" For="@(() => CurrentEmployeeCopy.ScientificAssistant)"/>
+                            </div>
+                        </div>
+                        <div class="row form-group">
+                            <label class="col-5" for="studentAssistantInput">Jahre als Studentische Hilfskraft:</label>
+                            <div class="col">
+                                <div class="row input-group">
+                                    <InputNumber id="studentAssistantInput" class="form-control" @bind-Value="CurrentEmployeeCopy.StudentAssistant" min="0" step="1" placeholder="Jahre Studentische Hilfskraft"/>
+                                </div>
+                                <ValidationMessage class="row form-text" For="@(() => CurrentEmployeeCopy.StudentAssistant)"/>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div>
+                        <h5>Branche:</h5>
+                        @foreach (var field in CurrentEmployeeCopy.Experience.Fields)
+                        {
+                            <span class="badge badge-light rounded-pill my-1 mr-1">
+                                <button type="button" @onclick="() => RemoveField(field)" class="btn btn-sm rounded-pill">&times;</button>
+                                @field.Name
+                            </span>
+                        }
+                        <span class="badge badge-light rounded-pill my-1">
+                            <button type="button" @onclick="() => ModalAddField()" class="btn btn-sm rounded-pill">+</button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+    
+            <div class="row mx-5">
+                <div class="col">
+                    <h4>Hardskills:</h4>
+                    <span class="badge badge-light rounded-pill my-1 mr-1">
+                        <button type="button" class="btn btn-sm rounded-pill" @onclick="@(() => ModalAddHardSkill())">+</button>
+                    </span>
+                    @foreach (var hardSkill in CurrentEmployeeCopy.Experience.HardSkills.OrderBy(h => h.Item1.Name))
+                    {
+                        <span class="badge badge-light rounded-pill my-1">
+                            <button type="button" class="btn btn-sm rounded-pill" @onclick="@(() => RemoveHardSkill(hardSkill.Item1))">&times;</button>
+                            @hardSkill.Item1.Name
+                            <select class="btn-sm btn-outline-secondary rounded-pill" required value="@hardSkill.Item2" @onchange="@(args => _employeeManager.UpdateHardSkill(CurrentEmployeeCopy, (hardSkill.Item1, Enum.Parse<HardSkillLevel>(args.Value as string))))">
+                                @foreach (HardSkillLevel level in Enum.GetValues(typeof(HardSkillLevel)))
+                                {
+                                    <option value="@level">@HardSkillLevelHelper.ToFriendlyString(level)</option>
+                                }
+                            </select>
+                        </span>
+                    }
+                </div>
+
+                <div class="col">
+                    <h4>Softskills:</h4>
+                    <span class="badge badge-light rounded-pill my-1 mr-1">
+                        <button type="button" @onclick="() => ModalAddSoftSkill()" class="btn btn-sm rounded-pill">+</button>
+                    </span>
+                    @foreach (var softSkill in CurrentEmployeeCopy.Experience.SoftSkills)
+                    {
+                        <span class="badge badge-light rounded-pill my-1 mr-1">
+                            <button type="button" @onclick="() => RemoveSoftSkill(softSkill)" class="btn btn-sm rounded-pill">&times;</button>
+                            @softSkill.Name
+                        </span>
+                    }
+                </div>
+
+                <div class="col">
+                    <h4>Projekte:</h4>
+                    <ul>
+                        @foreach (var project in _projectNames)
+                        {
+                            <li>
+                                <span class="my-1 mr-1">
+                                    <button type="button" @onclick="() => RemoveProject(project.Item1)" class="btn btn-sm rounded-pill">&times;</button>
+                                </span>
+                                @project.Item2
+                            </li>
+                            <ul  style="list-style: none">
+                                @foreach (var activity in ProjectActivitiesForProject[project.Item1])
+                                {
+                                    @if (_employeeManager.CheckEmployeeHasProjectActivities(activity))
+                                    {
+                                        <li>
+                                            <span class="my-1 mr-1">
+                                                <button type="button" @onclick="() => RemoveActivity(project.Item1, activity)" class="btn btn-sm rounded-pill">&times;</button>
+                                            </span>
+                                            <small>@activity.Description</small>
+                                        </li>
+                                    }
+                                }
+                                <li>
+                                    <span class="badge badge-light rounded-pill my-1">
+                                        <button type="button" @onclick="() => ModalAddActivity(project.Item1)" class="btn btn-sm rounded-pill">+</button>
+                                    </span>
+                                </li>
+                            </ul>
+                        }
+                        <li>
+                            <span class="badge badge-light rounded-pill my-1">
+                                <button type="button" @onclick="() => ModalAddProject()" class="btn btn-sm rounded-pill">+</button>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        <br>
+        <br>
+    </EditForm>
+
+
+@if (AddRoleShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Rolle hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="RoleSelectedId" required>
+                        <option value=""></option>
+                        @foreach (var role in _experienceManager.Roles.FindAll(x => !CurrentEmployeeCopy.Experience.Roles.Contains(x)))
+                        {
+                            <option value="@role.Id">@role.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddRole()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddLanguageShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Sprache hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="LanguageSelectedId" required>
+                        @foreach (var language in _experienceManager.Languages)
+                        {
+                            if(!CurrentEmployeeCopy.Experience.Languages.Exists(x => x.Item1.Equals(language)))
+                            {
+                                <option value="@language.Id">@language.Name</option>
+                            }
+                            
+                        }
+                    </select>
+                    <select class="form-select custom-select" @bind="LanguageLevelSelected" required>
+                        @foreach (LanguageLevel level in Enum.GetValues(typeof(LanguageLevel)))
+                        {
+                            <option value="@level">@LanguageLevelHelper.ToFriendlyString(level)</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddLanguage()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddFieldShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Branche hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="FieldSelectedId" required>
+                        @foreach (var field in _experienceManager.Fields.FindAll(x => !CurrentEmployeeCopy.Experience.Fields.Contains(x)))
+                        {
+                            <option value="@field.Id">@field.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddField()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddHardSkillShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Hardskill hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="HardSkillSelectedId" required>
+                        @foreach (var hardSkill in _experienceManager.HardSkills.FindAll(h => CurrentEmployeeCopy.Experience.HardSkills.Find(h2 => h2.Item1.Id.Equals(h.Id)).Item1 == null))
+                        {
+                            <option value="@hardSkill.Id">@hardSkill.Name</option>
+                        }
+                    </select>
+                    <select class="form-select custom-select" @bind="HardSkillLevelSelected" required>
+                        @foreach (HardSkillLevel level in Enum.GetValues(typeof(HardSkillLevel)))
+                        {
+                            <option value="@level">@HardSkillLevelHelper.ToFriendlyString(level)</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddHardSkill()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddSoftSkillShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Softskill hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="SoftSkillSelectedId">
+                        @foreach (var softSkill in _experienceManager.SoftSkills.FindAll(x => !CurrentEmployeeCopy.Experience.SoftSkills.Contains(x)))
+                        {
+                            <option value="@softSkill.Id">@softSkill.Name</option>
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddSoftSkill()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddProjectShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Projekt hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @onchange="args => ProjectSelectedId = Guid.Parse((string) args.Value)">
+                        <option value=""></option>
+                        @foreach (var project in _allProjectNames)
+                        {
+                            if (!CurrentEmployeeCopy.ProjectIds.Contains(project.Item1))
+                            {
+                                <option value="@project.Item1">@project.Item2</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddProject()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (AddActivityShow)
+{
+    <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5)">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">Projektaktivität hinzufügen</h4>
+                    <button type="button" @onclick="() => CloseModal()" class="close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <select class="form-select custom-select" @bind="ProjectActivitySelectedId">
+                        @foreach (var activity in ProjectActivities)
+                        {
+                            @if (!_employeeManager.CheckEmployeeHasProjectActivities(activity))
+                            {
+                                <option value="@activity.Id">@activity.Description</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" @onclick="() => CloseModal()" class="btn btn-secondary">Cancel</button>
+                    <button type="button" @onclick="() => AddActivity()" class="btn btn-primary">Hinzufügen</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+    
+}
+</Authorized>
+<NotAuthorized>
+    <NoAuthorisation/>
+</NotAuthorized>
+</AuthorizeView>

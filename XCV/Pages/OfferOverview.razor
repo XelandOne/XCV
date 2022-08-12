@@ -1,0 +1,149 @@
+﻿@page "/OfferOverview"
+@page "/OfferOverview/{Failed:bool}"
+@using XCV.Entities.Enums
+@using System.Globalization
+@inject NavigationManager _navigationManager
+
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+    <Authorized>
+
+        @if (Failed)
+        {
+            <div class="alert alert-danger" role="alert">
+                Das Angebot oder Mitarbeiterkurzprofil, das sie bearbeiten wollten, existiert nicht mehr!
+            </div>
+        }
+        <div class="row">
+            <h2 class="col mt-1">Angebote</h2>
+            <span class="col">
+                <button type="button" class="btn btn-outline-secondary rounded-pill float-right" @onclick="() => CreateOffer()">Neues Angebot</button>
+            </span>
+        </div>
+        <!--<button type="button" class="btn btn-outline-dark btn-sm float-right">Angebot bearbeiten</button>-->
+        <hr>
+        <br>
+        @if (!Hid)
+        {
+            <div class="list-group">
+                <li class="list-group-item list-group-item-action flex-column align-items-start m-2">
+                    <div class="form-group mt-2 mb-0">
+                        <input class="form-control mb-2" type="text" id="newOffer" placeholder="Angebotstitel..." @bind="Offer" @bind:event="oninput" required>
+                        @if (Offer != null && Offer.Length > 175)
+                        {
+                            <p class="w">Der Titel darf nicht länger als 175 Zeichen sein!</p>
+                            <div class="row a2">
+                                <button type="button" class="btn btn-outline-dark btn-sm mb-1" disabled>Bestätigen</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm ml-3 mb-1" @onclick="() => {Hid = true; Offer = null;}">Abbrechen</button>
+                            </div>
+                        } 
+                        else if (Offer != null && Offer.Length == 0)
+                        {
+                            <p class="w">Bitte einen Titel eingeben!</p>
+                            <div class="row a2">
+                                <button type="button" class="btn btn-outline-dark btn-sm mb-1" disabled>Bestätigen</button>
+                                <button type="button" class="btn btn-outline-dark btn-sm ml-3 mb-1" @onclick="() => {Hid = true; Offer = null;}">Abbrechen</button>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="row a2">
+                                <button class="btn btn-outline-dark btn-sm mb-1" type="submit" @onclick="() => SaveOffer(Offer)">Speichern</button>
+                                <button class="btn btn-outline-dark btn-sm ml-3 mb-1" @onclick="() => {Hid = true; Offer = null;}">Abbrechen</button>
+                            </div>
+                        }
+                    </div>
+                </li>
+            </div>
+        }
+        @if (Offers.Count > 0)
+        {
+            @foreach (var offer in OfferManager.Offers.OrderByDescending(x => x.LastChanged))
+            {
+                <div class="list-group">
+                    <a href="OfferOverview/Offer/@offer.Id" class="list-group-item list-group-item-action flex-column align-items-start m-2">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h3 class="mb-2 text-dark">@offer.Title</h3>
+                            @if (offer.StartDate.HasValue && offer.EndDate.HasValue)
+                            {
+                                <small>@offer.StartDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")) - @offer.EndDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</small>
+                            }
+                            else if (offer.StartDate.HasValue)
+                            {
+                                <small>@offer.StartDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")) - </small>
+                            }
+                            else if (offer.EndDate.HasValue)
+                            {
+                                <small> - @offer.EndDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</small>
+                            }
+                        </div>
+                        <div class="row mb-1 mt-1 ml-1 text-dark">
+                            <h5>Mitarbeiter: </h5>
+                            @foreach (var employee in offer.ShortEmployees)
+                            {
+                                <b>
+                                    <h6 class="ml-1 mr-2">@EmployeeNames[employee.EmployeeId].Item1 @EmployeeNames[employee.EmployeeId].Item2</h6>
+                                </b>
+                            }
+
+                        </div>
+                        <div class="row mb-1 ml-1 text-dark">
+                            <h5>Hard Skills: </h5>
+                            @foreach (var hardskill in offer.Experience.HardSkills)
+                            {
+                                <h5>
+                                    <span class="badge badge-pill badge-light ml-1 ">@hardskill.Item1.Name</span>
+                                </h5>
+                            }
+                        </div>
+                        <div class="row ml-1 text-dark">
+                            <h5>Soft Skills: </h5>
+                            @foreach (var softskill in offer.Experience.SoftSkills)
+                            {
+                                <h5>
+                                    <span class="badge badge-pill badge-light ml-1 ">@softskill.Name</span>
+                                </h5>
+                            }
+                        </div>
+                        <div class="row ml-1 text-dark">
+                            <h5>Sprachen: </h5>
+                            @foreach (var language in offer.Experience.Languages)
+                            {
+                                <h5>
+                                    <span class="badge badge-pill badge-light ml-1 ">@language.Item1.Name</span>
+                                </h5>
+                            }
+                        </div>
+                        <div class="row ml-1 text-dark">
+                            <h5>Branchen: </h5>
+                            @foreach (var field in offer.Experience.Fields)
+                            {
+                                <h5>
+                                    <span class="badge badge-pill badge-light ml-1 ">@field.Name</span>
+                                </h5>
+                            }
+                        </div>
+                        <div class="row ml-1 text-dark">
+                            <h5>Rollen: </h5>
+                            @foreach (var role in offer.Experience.Roles)
+                            {
+                                <h5>
+                                    <span class="badge badge-pill badge-light ml-1 ">@role.Name</span>
+                                </h5>
+                            }
+                        </div>
+
+                        <!--<p class="mb-1 text-dark">Mitarbeiter: </p>
+                        <p class="mb-1 text-dark">Hardskills: </p>
+                        <p class="mb-1 text-dark">Softskills: </p>-->
+                    </a>
+                </div>
+            }
+        }
+        <br>
+
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

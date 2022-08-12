@@ -1,0 +1,812 @@
+{
+  "Projects": {
+    "Project01": {
+      "Id": "47131CEE-EE18-4113-BC1C-BC00CD0E74EB",
+      "Title": "Management für Energie-Versorgungsnetze",
+      "StartDate": "25/05/2010 00:00:00",
+      "EndDate": "12/08/2010 00:00:00",
+      "ProjectDescription": "Die digitale intelligente, datengetriebene und netzstabilisierende Plattform (IDNE) ist eine Energiemanagementplattform ganz im Sinne eines Smart Grids. Diese führt dank der integrierten Betrachtung von Energie 4.0- und Industrie 4.0-Anforderungen zu einer kosten- und erlösoptimierten Steuerung der Energieversorgung in Echtzeit.",
+      "ProjectActivities": [
+        "Entwicklung mit React",
+        "Entwicklung mit TypeScript ",
+        "Entwicklung mit JavaScript ",
+        "Entwicklung mit C#/.NET Core",
+        "Entwicklung mit C++",
+        "Entwicklung mit IBM CPLEX"
+      ],
+      "Purpose": [
+        "Reduzierung der Energiekosten",
+        "Erlössteigerung durch Flexibilitätsvermarktung",
+        "Höhere Sicherheit in der Energieversorgung",
+        "Beitrag zur allgemeinen Netzstabilität"
+      ]
+    },
+    "Project02": {
+      "Id": "F4F1A732-1F83-4A3C-BB92-F88350AEEE3B",
+      "Title": "Digitaler Zwilling von Assets",
+      "StartDate": "13/08/2017 00:00:00",
+      "EndDate": "12/08/2018 00:00:00",
+      "ProjectDescription": "Der realisierte Nutzen für die WITTENSTEIN SE ist ein zentrales Verwaltungsschalen-Repository, welches Produktinformationen den smarten Services auf den gängigen IIoT-Plattformen wie MindSphere, ADAMOS oder SAP AIN bereitstellt. Über die weltweit eindeutige Asset-ID werden Produkte mit ihrer Verwaltungsschale verknüpft und durch verschiedene Teilmodelle, wie z.B. „Identification“, beschrieben.\n\nDer realisierte MindSphere-Verwaltungsschalen-Viewer liest anhand der Asset-ID dynamisch diese Teilmodelle aus und kann zur automatischen Konfiguration von Smart Services genutzt werden – die Basis für weitere Komponentenanbindung und Datenanalyse.",
+      "ProjectActivities": [
+        "Entwicklung mit ETL",
+        "Entwicklung mit Angular",
+        "Entwicklung mit SAP",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit GraphQL"
+      ],
+      "Purpose": [
+        "Fastest way to stop an argument between a bunch of deaf people? Just switch off the lights.",
+        "I took away my ex-girlfriend’s wheelchair. Guess who came crawling back to me?",
+        "Even people who are good for nothing have the capacity to bring a smile to your face, for instance when you push them down the stairs."
+      ]
+    },
+    "Project03": {
+      "Id": "A29C6808-449E-4073-88CB-7C467DC24F59",
+      "Title": "Digitale Gesichts- und Zentrier-Datenerfassung",
+      "StartDate": "25/05/2016 00:00:00",
+      "EndDate": "12/08/2020 00:00:00",
+      "ProjectDescription": "XITASO ist seit Anfang 2016 damit betraut, in enger agiler und beratender Zusammenarbeit mit dem Auftraggeber Software-Komponenten für VISUFIT 1000 vom Prototyp bis zur Marktreife zu entwickeln.",
+      "ProjectActivities": [
+        "Entwicklung mit C++",
+        "Entwicklung mit C#/NET",
+        "Entwicklung mit TypeScript",
+        "Entwicklung mit Angular",
+        "Entwicklung mit CMake",
+        "Entwicklung mit Fabric",
+        "Entwicklung mit gRPC & Protobuf",
+        "Entwicklung mit OpenCV"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project04": {
+      "Id": "235203D7-94D2-4EEB-834D-E9D2E84DA8DC",
+      "Title": "IT Security durch KRITIS Defender",
+      "StartDate": "10/03/2020 00:00:00",
+      "EndDate": "05/12/2021 00:00:00",
+      "ProjectDescription": "XITASO hat eine Webanwendung entwickelt, durch die das Netz effizient überwacht und ausgewertet werden kann. Durch das Intrusion Detection System (IDS) können verdächtige Vorgänge frühzeitig erkannt, abgewehrt und für Audits archiviert werden. Über eine benutzungsfreundliche Oberfläche lässt sich das Intrusion Detection System passgenau konfigurieren.",
+      "ProjectActivities": [
+        "Entwicklung mit SignalR",
+        "Entwicklung mit Angular",
+        "Entwicklung mit ASP.NET"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project05": {
+      "Id": "E101C153-2795-411F-9CCC-AB8E58A7CB72",
+      "Title": "Teilnehmer-Management für Automotive-Marktforschungen",
+      "StartDate": "25/05/2017 00:00:00",
+      "EndDate": "12/08/2017 00:00:00",
+      "ProjectDescription": "In enger Zusammenarbeit mit den Projektleitern bei CARGO Projects hat XITASO eine maßgeschneiderte und benutzerfreundliche Anwendung für das Teilnehmermanagement entwickelt. Das Bedienkonzept für das Teilnehmermanagementportal CARGOVERSUM ist vielseitig und intuitiv. Das gesamte Teilnehmermanagement im Rahmen eines Events kann nun über eine einzige Plattform realisiert und betreut werden.",
+      "ProjectActivities": [
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit Angular",
+        "Entwicklung mit SQLite",
+        "Entwicklung mit ASP.NET"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project06": {
+      "Id": "5DF4207C-453E-4509-92DF-B20E7B607796",
+      "Title": "Papierlose Montage",
+      "StartDate": "13/05/2015 00:00:00",
+      "EndDate": "05/03/2016 00:00:00",
+      "ProjectDescription": "Unter dem Motto „Papierlose Montage“ bestand die Aufgabe für die XITASO Expert*innen darin, eine Software-Lösung zu entwickeln, mit deren Hilfe auf die Laufzettel in Papierform verzichtet werden kann. Im Mittelpunkt sollte deshalb eine Web-Anwendung stehen, die auf einem zentralen Webserver im Stammwerk läuft. Von dort aus sollten dann kleine Tablet-PCs bedient werden, die an den einzelnen Montageplätzen in den verschiedenen Werken angebracht sind. Grund für die Wahl einer Browser-Applikation war, dass die Auswahl der Tablet-PCs nicht an ein bestimmtes Fabrikat gebunden ist und somit ein hohes Maß an Flexibilität bietet.",
+      "ProjectActivities": [
+        "Entwicklung mit HTML5",
+        "Entwicklung mit AngularJS",
+        "Entwicklung mit SPS",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit SignalR",
+        "Entwicklung mit Oracle Database"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project07": {
+      "Id": "AC8F0C76-8A2B-415F-9BE4-9256E1265E60",
+      "Title": "Support und Software-Modernisierung",
+      "StartDate": "25/05/2021 00:00:00",
+      "EndDate": "12/08/2021 00:00:00",
+      "ProjectDescription": "Historisch gewachsene Software beruht oft auf komplexen, undurchsichtigen Strukturen. Die Expert*innen von XITASO sind in der Lage, die Funktionsweise solcher Legacy-Systeme schnell zu erfassen und als verlässlicher Partner optimalen Support zu gewährleisten.\n\nDurch die Integration eines neuen Fehlermanagementsystems in das bestehende System konnte die Fehleranalyse optimiert werden. Fehler lassen sich leichter lokalisieren und beheben, wodurch Beeinträchtigungen der Produktion vermieden werden.",
+      "ProjectActivities": [
+        "Entwicklung mit Elasticsearch",
+        "Entwicklung mit Kibana",
+        "Entwicklung mit .NET",
+        "Entwicklung mit MS SQLServer",
+        "Entwicklung mit MS Access",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit Windows Forms"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project08": {
+      "Id": "A4490772-C5EE-4798-9F80-BC8248F71946",
+      "Title": "Zentrale Plattform für die Brillenglasberatung",
+      "StartDate": "13/08/2013 00:00:00",
+      "EndDate": "20/12/2016 00:00:00",
+      "ProjectDescription": "Seit Mitte 2016 ist XITASO damit betraut, die Softwarekomponenten für die Integration der Geräte sowie die User Experience der Systeme für iPad und PC zu entwickeln.",
+      "ProjectActivities": [
+        "Entwicklung mit Angular",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit Cordova",
+        "Entwicklung mit Electron"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project09": {
+      "Id": "B136FC99-F63C-4C88-9811-0F5EC7E9B606",
+      "Title": "Smart Factory",
+      "StartDate": "25/05/2009 00:00:00",
+      "EndDate": "12/08/2010 00:00:00",
+      "ProjectDescription": "Die von XITASO entwickelte Cloud-Applikation bot nicht nur einen hohen Bedienkomfortbei der Nutzung, sondern sorgte außerdem für die sichere Kommunikation zwischen dem Endgerät und dem geschützten internen Produktionsnetz. Die Applikation hat zudem die Aufträge mit der Produktionslinie auf dem Messestand synchronisiert.\nDie App stellte damit einen wichtigen Bestandteil der Smart Factory, einer voll automatisierten, vernetzten und individualisierbaren Fertigung dar.",
+      "ProjectActivities": [
+        "Entwicklung mit HTML5",
+        "Entwicklung mit Angular",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit Azure"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project10": {
+      "Id": "233F0046-4234-4826-9556-39F17565998E",
+      "Title": "Mobiles Service- und Wartungstablet",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "XITASO hat in enger Zusammenarbeit mit manroland Goss web systems eine benutzungsfreundliche mobile Anwendung für Windows-Tablets entwickelt, in der alle notwendigen Informationen und Dokumentationen für eine schnelle Fehlererkennung und -behebung gebündelt werden. Dadurch wird die Zeit zwischen dem Auftreten einer Störung an komplexen Anlagen und deren Behebung reduziert und der Komfort in der Servicetechnik maximiert. Neben der Erarbeitung eines ansprechenden Designs und einer benutzungsfreundlichen Bedienung bestand die Herausforderung auch darin, eine direkte, stabile und sichere Verbindung zu den Maschinen herzustellen.",
+      "ProjectActivities": [
+        "Entwicklung mit WebSockets",
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit RDP",
+        "Entwicklung mit WPF"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project11": {
+      "Id": "A367F647-4E6B-4F86-B1A6-A42615FCA214",
+      "Title": "Wittenstein After-Sales-Portal",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Das webbasierte Portal ermöglicht bei der Inbetriebnahme und Instandhaltung eine eindeutige Identifizierung der Wittenstein-Produkte und stellt individuell zugeschnittene Informationen und Services dafür bereit. Die Anwendung wurde in enger Zusammenarbeit zwischen den agilen Entwicklungsteams von WITTENSTEIN SE und XITASO implementiert. Das geräteübergreifende & intuitive Bedienkonzept wurde auf Basis von Kund*innenbefragungen und Klick-Prototypen entwickelt.",
+      "ProjectActivities": [
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit Angular",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit SAP",
+        "Entwicklung mit Azure Functions",
+        "Entwicklung mit Azure",
+        "Entwicklung mit GraphQL"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project12": {
+      "Id": "AEAA1ECF-1316-4310-9291-70517331B947",
+      "Title": "Flexplan",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Seit 2015/16 setzt die Klinik für Anästhesiologie am Klinikum rechts der Isar (MRI) die Personaleinsatzplanungs-Software Flexplan ein. Durch Flexplan werden Opportunitätskosten gesenkt und das Planungsniveau erhöht. Die Effizienz, Transparenz und Qualität der Software führt zu Zeit-und Kostenersparnis und gewährleistet steigende Personalzufriedenheit und Planungssicherheit. Das Projekt Flexplan ging aus einer Forschungs- und Entwicklungskooperation zwischen der Klinik für Anästhesiologie am MRI und dem UNIKA-T (Universitäres Zentrum für Gesundheitswissenschaften am Klinikum Augsburg) hervor, die die Optimierung von Personalprozessen untersucht hat. XITASO als IT-Dienstleister war für die technische Umsetzung der Forschungsergebnisse zuständig. Mittlerweile konnte die Personaleinsatzplanungs-Software auch in einer anderen Klinik am MRI adaptiert und umgesetzt werden.",
+      "ProjectActivities": [
+        "Entwicklung mit TypeScript",
+        "Entwicklung mit Node.js",
+        "Entwicklung mit React",
+        "Entwicklung mit PHP",
+        "Entwicklung mit MariaDB",
+        "Entwicklung mit COIN-OR CBC",
+        "Entwicklung mit Symfony",
+        "Entwicklung mit Traefik "
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project13": {
+      "Id": "4E9B86A5-FB7E-4889-843B-E53573631B6A",
+      "Title": "Software Download Portal",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Anfang 2015 kam ZEISS IMT mit dem Wunsch auf XITASO zu, ein Download Portal zu entwickeln, das es IMT-Kund*innen ermöglichen sollte, Softwarepakete – Vollversionen, Service Packs, Patches, etc. – für ihre Messgeräte schnell und einfach herunterzuladen.",
+      "ProjectActivities": [
+        "Entwicklung mit C#/.NET",
+        "Entwicklung mit ASP.NET",
+        "Entwicklung mit AngularJS ",
+        "Entwicklung mit HTML5",
+        "Entwicklung mit Azure",
+        "Entwicklung mit JavaScript"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project14": {
+      "Id": "93BB7EA7-4A6C-440F-BB26-BA7F14C5F217",
+      "Title": "UI/UX Case Study",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Stadtwerke oder Energieversorger zählen zu den “Kritischen Infrastrukturen”, sobald sie eine bestimmte Anzahl an Haushalten versorgen. Sie stehen besonders im Fokus potenzieller Cyberattacken. Das IT-Sicherheitsgesetz des Bundesamtes für Sicherheit in der Informationstechnik (BSI) erfordert deshalb, dass die verwendeten IT-Systeme speziell abgesichert sind und Attacken gemeldet werden müssen. Durch ein sogenanntes Intrusion Detection System (IDS) soll das Netz effizient überwacht und ausgewertet werden. Verdächtige Vorgänge können so frühzeitig erkannt, abgewehrt und für Audits archiviert werden. XITASO hat für die Firma ausecus eine Webanwendung, den KRITIS Defender entwickelt, durch die das Netz effizient überwacht und ausgewertet werden kann.",
+      "ProjectActivities": [
+        "Entwicklung mit Angular und Typescript",
+        "Entwicklung mit JavaScript",
+        "Entwicklung mit jQuery",
+        "Entwicklung mit C#",
+        "Entwicklung mit Blazor",
+        "Entwicklung mit Java"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project15": {
+      "Id": "183513A1-4146-40E7-B4D9-921658A04871",
+      "Title": "ROMA Pakethöhenkonfigurator",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Ziel war eine mobile Lösung, die schrittweise die benötigten Daten von Benutzer*innen erfragt und mit Hilfe dieser die zur Montage notwendigen Maße berechnet. Eine Vielzahl von mathematischen Formeln und Fachwissen ist nötig, um eine fachgerechte Auswahl und Anbringung des Raffstoren-Systems zu gewährleisten.",
+      "ProjectActivities": [
+        "Entwicklung mit Java",
+        "Entwicklung mit bjective-C",
+        "Entwicklung mit HTML5",
+        "Entwicklung mit JavaScript",
+        "Entwicklung mit Android",
+        "Entwicklung mit iOS"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project16": {
+      "Id": "6A00CEE7-279F-4B7D-B6E2-B29B620EE9D9",
+      "Title": "B2B-Marktplatz für die Druckindustrie",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Mit langjähriger Projekterfahrung im Umgang mit der Erneuerung von Bestandssystemen haben die Experten von XITASO den IST-Zustand der bestehenden CMS und E-Commerce Lösung in der Tiefe analysiert, und eine Strategie für die Erneuerung und Verbesserung des Systems von innen heraus mit dem Einsatz aktueller Technologien, wie React, entwickelt. Neben der Integration neuer Features und Komponenten, wie der SAP-Anbindung oder der Tradebyte Integration für den Marktplatz, konnte vor allem auch die Performance des Systems innerhalb kürzester Zeit deutlich gesteigert werden.",
+      "ProjectActivities": [
+        "Entwicklung mit PHP",
+        "Entwicklung mit React",
+        "Entwicklung mit MySQL",
+        "Entwicklung mit Apache",
+        "Entwicklung mit Elasticsearch",
+        "Entwicklung mit Symfony",
+        "Entwicklung mit Linux"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    },
+    "Project17": {
+      "Id": "B7BEB8DC-50C5-464C-9CF4-F6F29681F217",
+      "Title": "Steuerungsevaluierung und Architekturberatung",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ProjectDescription": "Als Digitalisierungspartner und Experte für Software Engineering hat XITASO verschiedene Steuerungssysteme hinsichtlich ihrer Fähigkeiten und Eigenschaften wie Performance, Wartbarkeit und Offenheit für modernes Software Engineering untersucht. Steuerungen und Engineering-Tools wurden dabei ausführlich getestet und hinsichtlich ihres Potenzials auf moderne, kollaborative Softwareentwicklung bewertet. Besonders mit Blick auf geplante innovative Features ist die Wahl der passenden Steuerungen wichtig, um OT und IT bestmöglich und eng miteinander zu verbinden. Der bewusste und gezielte Einsatz von State of the art-Steuerungssystemen schafft es somit, softwareseitig nicht nur Einzelmaschinen, sondern gesamte Strecken vernetzen, steuern und monitoren zu können.",
+      "ProjectActivities": [
+        "Entwicklung mit Evaluierung",
+        "Entwicklung mit Architekturberatung",
+        "Entwicklung mit Hardwaretests",
+        "Entwicklung mit SysML und SYSMOD"
+      ],
+      "Purpose": [
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt",
+        "Weil´s Geld gibt"
+      ]
+    }
+  },
+  "Employees": {
+    "Employee01": {
+      "Id": "56DCC032-A133-469D-AC6D-03810BCE4861",
+      "Surname": "Ferguson",
+      "Firstname": "Brian",
+      "Username": "Admin",
+      "WorkExperience": "15",
+      "ScientificAssistant": "5",
+      "StudentAssistant": "3",
+      "EmployedSince": "25/05/2010 00:00:00",
+      "RateCardLevel": "2",
+      "ProfilePicture": "",
+      "Authorizations": "3"
+    },
+    "Employee02": {
+      "Id": "01939BFB-756D-4572-B106-4448123F9315",
+      "Surname": "Hopkins",
+      "Firstname": "Perry",
+      "Username": "SalesAdmin",
+      "WorkExperience": "12",
+      "ScientificAssistant": "10",
+      "StudentAssistant": "5",
+      "EmployedSince": "13/02/2015 00:00:00",
+      "RateCardLevel": "4",
+      "ProfilePicture": "",
+      "Authorizations": "4"
+    },
+    "Employee03": {
+      "Id": "64FD51E1-6FC9-4563-A81F-7F020C05EECC",
+      "Surname": "Hamilton",
+      "Firstname": "Mario",
+      "Username": "User",
+      "WorkExperience": "2",
+      "ScientificAssistant": "1",
+      "StudentAssistant": "0",
+      "EmployedSince": "17/10/2020 00:00:00",
+      "RateCardLevel": "1",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee04": {
+      "Id": "0A0388AA-E0FD-45C0-ACD5-16D188B8D2CD",
+      "Surname": "King",
+      "Firstname": "Mildred",
+      "Username": "Sales",
+      "WorkExperience": "2",
+      "ScientificAssistant": "5",
+      "StudentAssistant": "1",
+      "EmployedSince": "05/05/2005 00:00:00",
+      "RateCardLevel": "7",
+      "ProfilePicture": "",
+      "Authorizations": "2"
+    },
+    "Employee05": {
+      "Id": "5831A015-164D-459A-B39D-0C5A024A3C23",
+      "Surname": "Perry",
+      "Firstname": "Marshall",
+      "Username": "MarshallPer",
+      "WorkExperience": "11",
+      "ScientificAssistant": "7",
+      "StudentAssistant": "5",
+      "EmployedSince": "03/10/2011 00:00:00",
+      "RateCardLevel": "8",
+      "ProfilePicture": "",
+      "Authorizations": "4"
+    },
+    "Employee06": {
+      "Id": "DDC4B0F8-B6F0-460E-8AAD-9D71DE9EFDDC",
+      "Surname": "Marsha",
+      "Firstname": "Oliver",
+      "Username": "Olivermar",
+      "WorkExperience": "0",
+      "ScientificAssistant": "0",
+      "StudentAssistant": "0",
+      "EmployedSince": "15/06/2021 00:00:00",
+      "RateCardLevel": "1",
+      "ProfilePicture": "",
+      "Authorizations": "3"
+    },
+    "Employee07": {
+      "Id": "A15494AB-1355-419A-9A50-16D2D81626EE",
+      "Surname": "Michele",
+      "Firstname": "Bryant",
+      "Username": "BryantMichele",
+      "WorkExperience": "1",
+      "ScientificAssistant": "0",
+      "StudentAssistant": "0",
+      "EmployedSince": "25/05/2021 00:00:00",
+      "RateCardLevel": "1",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee08": {
+      "Id": "FCF157C5-8C18-4350-B6D9-9AD0FC620368",
+      "Surname": "Allen",
+      "Firstname": "Jordan",
+      "Username": "JordanAllen",
+      "WorkExperience": "2",
+      "ScientificAssistant": "0",
+      "StudentAssistant": "0",
+      "EmployedSince": "12/01/2020 00:00:00",
+      "RateCardLevel": "3",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee09": {
+      "Id": "79192D3D-E933-41DB-B81B-0BF466D536D5",
+      "Surname": "Hugh",
+      "Firstname": "Jordan",
+      "Username": "Jordanhug",
+      "WorkExperience": "4",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "0",
+      "EmployedSince": "13/08/2018 00:00:00",
+      "RateCardLevel": "4",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee10": {
+      "Id": "CF7C3E80-4B0B-4652-A3A2-2AA34F33C70A",
+      "Surname": "Connor",
+      "Firstname": "Ortiz",
+      "Username": "OrtizCon",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee11": {
+      "Id": "d8b6364c-6497-4c38-a79b-69e196352950",
+      "Surname": "Long",
+      "Firstname": "Tristan",
+      "Username": "TristanLon",
+      "WorkExperience": "5",
+      "ScientificAssistant": "4",
+      "StudentAssistant": "3",
+      "EmployedSince": "12/05/2020 00:00:00",
+      "RateCardLevel": "4",
+      "ProfilePicture": "",
+      "Authorizations": "2"
+    },
+    "Employee12": {
+      "Id": "5eecc9d0-826b-4a32-97f0-028e548a9484",
+      "Surname": "Fleming",
+      "Firstname": "Hunter",
+      "Username": "HunterFle",
+      "WorkExperience": "3",
+      "ScientificAssistant": "1",
+      "StudentAssistant": "1",
+      "EmployedSince": "23/04/2013 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "3"
+    },
+    "Employee13": {
+      "Id": "664d2f8d-4f17-4fc5-8ca0-0f97c2a65f9c",
+      "Surname": "Jordan",
+      "Firstname": "Melanie",
+      "Username": "MelanieJor",
+      "WorkExperience": "12",
+      "ScientificAssistant": "4",
+      "StudentAssistant": "2",
+      "EmployedSince": "24/08/2012 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "2"
+    },
+    "Employee14": {
+      "Id": "b712f762-81e9-431d-84fb-06fcda6b11f3",
+      "Surname": "Byrd",
+      "Firstname": "Joel",
+      "Username": "JoelByr",
+      "WorkExperience": "4",
+      "ScientificAssistant": "1",
+      "StudentAssistant": "9",
+      "EmployedSince": "12/04/2020 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee15": {
+      "Id": "0ba5240f-3d6d-4999-af44-d32525e4b16d",
+      "Surname": "Cruz",
+      "Firstname": "Megan",
+      "Username": "MeganCru",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee16": {
+      "Id": "b56339e0-1b74-4fb3-9172-5ebe4b9c0263",
+      "Surname": "Craig",
+      "Firstname": "Joy",
+      "Username": "JoyCra",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee17": {
+      "Id": "39fcec0c-3159-41c4-a964-cdeaec802676",
+      "Surname": "Carlson",
+      "Firstname": "Ramon",
+      "Username": "RamonCar",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee18": {
+      "Id": "93f2c652-3734-440b-b7c5-e8402d4d86a8",
+      "Surname": "Holt",
+      "Firstname": "Harper",
+      "Username": "HarperHol",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee19": {
+      "Id": "698189fe-5cfd-4e14-ba0e-e0b05c33886e",
+      "Surname": "Fleming",
+      "Firstname": "Stacey",
+      "Username": "StaceyFle",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    },
+    "Employee20": {
+      "Id": "cbc84b4f-60f1-4737-a046-a6054134a3e5",
+      "Surname": "Long",
+      "Firstname": "Tina",
+      "Username": "TinaLon",
+      "WorkExperience": "8",
+      "ScientificAssistant": "2",
+      "StudentAssistant": "1",
+      "EmployedSince": "12/11/2017 00:00:00",
+      "RateCardLevel": "5",
+      "ProfilePicture": "",
+      "Authorizations": "1"
+    }
+  },
+  "Offers": {
+    "Offer01": {
+      "Id": "3330AF5A-1CF8-4EDB-82F1-2B1A25E7478A",
+      "EmployeeId": "",
+      "Title": "Steuerungsevaluierung und Architekturberatung",
+      "StartDate": "06/02/2014 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "430CA951-BEE4-42B3-8EDF-DBCFAD3A7C9E",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "A4FB609D-0325-45A1-8BF3-38D2DA1CC8C4",
+          "EmployeeId": "0A0388AA-E0FD-45C0-ACD5-16D188B8D2CD"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "E4F3ECFA-84D0-42AC-BFC4-7F1DDE0C5BD8",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        }
+      }
+    },
+    "Offer02": {
+      "Id": "2FD28B78-FB87-484F-BB97-E4E3C609CC8F",
+      "Title": "B2B-Marktplatz für die Druckindustrie",
+      "StartDate": "06/05/2017 00:00:00",
+      "EndDate": "25/08/2018 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "2DBF0B63-8E37-4C08-8CC9-49264902B0E8",
+          "EmployeeId": "FCF157C5-8C18-4350-B6D9-9AD0FC620368"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "C672AB65-8D46-4DA9-BB07-7A9AB2380D63",
+          "EmployeeId": "79192D3D-E933-41DB-B81B-0BF466D536D5"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "9D0F2BBE-A095-4885-A35C-0E5E189606BF",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        }
+      }
+    },
+    "Offer03": {
+      "Id": "EE9DEE64-5C2D-485F-A642-0F0AD4582122",
+      "EmployeeId": "",
+      "Title": "ROMA Pakethöhenkonfigurator",
+      "StartDate": "15/02/2020 00:00:00",
+      "EndDate": "15/07/2021 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "AB14E4DD-2418-4126-AE51-249AD60D7E52",
+          "EmployeeId": "79192D3D-E933-41DB-B81B-0BF466D536D5"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "FFD2D5F2-756D-4131-AFF6-B3F750230087",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "1A49423C-D9EA-4A17-88D2-C55AF18B8191",
+          "EmployeeId": "0A0388AA-E0FD-45C0-ACD5-16D188B8D2CD"
+        }
+      }
+    },
+    "Offer04": {
+      "Id": "5AFE40AD-55D9-4EE3-8A6A-11451C8B64BF",
+      "EmployeeId": "",
+      "Title": "UI/UX Case Study",
+      "StartDate": "06/02/2012 00:00:00",
+      "EndDate": "25/07/2018 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "1E608A23-E806-4188-B60E-682D2E70E800",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "0AD8DA0C-AE99-4D67-A340-04A82C59041E",
+          "EmployeeId": "CF7C3E80-4B0B-4652-A3A2-2AA34F33C70A"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "1000E48A-6B4F-410F-8F9E-ED14D20CC781",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        }
+      }
+    },
+    "Offer05": {
+      "Id": "B59D5B97-9B52-4A37-9BB5-7EA9520D325C",
+      "EmployeeId": "",
+      "Title": "Software Download Portal",
+      "StartDate": "02/02/2009 00:00:00",
+      "EndDate": "20/07/2021 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "491E6C1E-C966-48B4-877B-90449A2CEA25",
+          "EmployeeId": "FCF157C5-8C18-4350-B6D9-9AD0FC620368"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "784B643A-7498-4FE1-99D9-BCB04CE9780F",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "3582DE0B-30ED-4E98-B096-2BE1F7412A99",
+          "EmployeeId": "CF7C3E80-4B0B-4652-A3A2-2AA34F33C70A"
+        }
+      }
+    },
+    "Offer06": {
+      "Id": "B85BDBD2-A27C-46CF-B87C-27E8C3DDDEB3",
+      "EmployeeId": "",
+      "Title": "Flexplan",
+      "StartDate": "02/04/2012 00:00:00",
+      "EndDate": "22/09/2012 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "E89CB522-C4C5-4243-853B-A7DBD4507AF4",
+          "EmployeeId": "FCF157C5-8C18-4350-B6D9-9AD0FC620368"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "C42CD344-6E44-48BF-8D8C-57BC3F9FE15B",
+          "EmployeeId": "A15494AB-1355-419A-9A50-16D2D81626EE"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "28DC9788-2865-4309-BC21-3A8282599901",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        }
+      }
+    },
+    "Offer07": {
+      "Id": "A87E23C7-B525-4C06-B27E-6E037FDB2373",
+      "EmployeeId": "",
+      "Title": "Wittenstein After-Sales-Portal",
+      "StartDate": "06/02/2019 00:00:00",
+      "EndDate": "25/09/2020 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "E511B892-1AF5-4861-91F6-53236CE4503E",
+          "EmployeeId": "79192D3D-E933-41DB-B81B-0BF466D536D5"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "F22E8003-DE4B-458A-A325-D89415B8DC75",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "407AF456-5782-4EFD-807D-4421F139D3A4",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        }
+      }
+    },
+    "Offer08": {
+      "Id": "6F114C2B-5FF8-498D-B768-3BD7337B48A3",
+      "EmployeeId": "",
+      "Title": "Mobiles Service- und Wartungstablet",
+      "StartDate": "03/05/2016 00:00:00",
+      "EndDate": "15/09/2021 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "0B4A72F3-A0E9-4A04-9F53-B5D8E3973393",
+          "EmployeeId": "A15494AB-1355-419A-9A50-16D2D81626EE"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "E03EDBA8-E91D-47C7-93C5-CDEC46B1E4E3",
+          "EmployeeId": "0A0388AA-E0FD-45C0-ACD5-16D188B8D2CD"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "F9C57D7D-51FF-4203-A048-E2381CC86E11",
+          "EmployeeId": "5831A015-164D-459A-B39D-0C5A024A3C23"
+        }
+      }
+    },
+    "Offer09": {
+      "Id": "F3907B58-8097-49E5-BB81-C76D5FDA35E0",
+      "EmployeeId": "",
+      "Title": "Smart Factory",
+      "StartDate": "08/02/2017 00:00:00",
+      "EndDate": "12/10/2018 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "021A79D7-F0A1-4D8F-B4AF-D9DC68E35B39",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "4A5F6447-A966-47A5-A56B-487898AC9F53",
+          "EmployeeId": "01939BFB-756D-4572-B106-4448123F9315"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "3DB68A5C-BBC8-4F17-B508-E9FFDA3442BA",
+          "EmployeeId": "0A0388AA-E0FD-45C0-ACD5-16D188B8D2CD"
+        }
+      }
+    },
+    "Offer10": {
+      "Id": "390FCA37-EC9F-481D-9802-692F7AE99E24",
+      "Title": "Zentrale Plattform für die Brillenglasberatung",
+      "StartDate": "22/04/2021 00:00:00",
+      "EndDate": "12/08/2021 00:00:00",
+      "ShownEmployeeProperties": {
+        "ShownEmployeeProperty01": {
+          "Id": "CE9E0261-944A-416B-B840-6151C07DB353",
+          "EmployeeId": "5831A015-164D-459A-B39D-0C5A024A3C23"
+        },
+        "ShownEmployeeProperty02": {
+          "Id": "F93E1A88-0274-406C-A8BC-B1769729103B",
+          "EmployeeId": "DDC4B0F8-B6F0-460E-8AAD-9D71DE9EFDDC"
+        },
+        "ShownEmployeeProperty03": {
+          "Id": "951F8C32-072D-4A33-BD12-1FC9167790BB",
+          "EmployeeId": "56DCC032-A133-469D-AC6D-03810BCE4861"
+        }
+      }
+    }
+  }
+}

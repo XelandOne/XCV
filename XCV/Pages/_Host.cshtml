@@ -1,0 +1,47 @@
+@page "/"
+@using XCV.Data
+@namespace XCV.Pages
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+    Layout = null;
+}
+    
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>XCV</title>
+    <base href="~/"/>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
+    <link href="css/site.css" rel="stylesheet"/>
+    <link href="XCV.styles.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="_content/Radzen.Blazor/css/default-base.css">
+</head>
+<body class="rz-default-scrollbars">
+<component type="typeof(App)" render-mode="ServerPrerendered"/>
+
+<div id="blazor-error-ui">
+    <environment include="Staging,Production">
+        An error has occurred. This application may no longer respond until reloaded.
+    </environment>
+    <environment include="Development">
+        Es ist leider ein Fehler aufgetreten. Bitte laden Sie die Seite neu.
+    </environment>
+    <a href="" class="reload">Seite neu laden</a>
+    <a class="dismiss">🗙</a>
+</div>
+
+<script src="_framework/blazor.server.js"></script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+<script src="_framework/blazor.webassembly.js"></script>
+
+<script src="javascript.js"></script>
+
+ <script src="_content/Radzen.Blazor/Radzen.Blazor.js"></script>
+</body>
+</html>

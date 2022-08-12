@@ -1,0 +1,189 @@
+﻿@page "/EmployeeSearch/Results"
+@page "/EmployeeSearch/Results/{Id:guid}"
+@page "/EmployeeSearch/Results/{Id:guid}/{Direct:bool}"
+@using XCV.Entities.Enums
+@using XCV.Data
+@using XCV.Entities
+@using XCV.Services
+
+@inject NavigationManager _navManager
+@inject SearchManager _searchManager
+@inject OfferManager _offerManager
+@inject EmployeeManager _employeeManager
+@inject IJSRuntime _jsRuntime
+
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()" Context="auth_context">
+    <Authorized>
+        <h3>Mitarbeitersuche</h3>
+        <hr>
+        <br>
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-sm-9 col-md-9 col-lg-8">
+                    <div class="input-group w-100">
+                        <!--<div class="input-group-prepend"></div>-->
+                        <input type="text" class="form-control" placeholder="Mitarbeiter..." @bind="Filter" @bind:event="oninput" aria-label="" aria-describedby="basic-addon1">
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                </svg>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="list-group w-100">
+                        @foreach (var (employee, experienceIds) in EmployeeSelection)
+                        {
+                            Hid = !IsVisible(employee.FirstName + " " + employee.SurName);
+
+                            <li class="list-group-item" hidden="@Hid">
+                                <div class="row">
+                                    <div class="form-check ml-1 mr-2">
+                                        <input class="form-check-input" type="checkbox" id="@employee.UserName" @onchange="eventArgs => UpdateSelected(employee.Id, eventArgs.Value)">
+                                        <label class="form-check-label mb-2" for=@employee.UserName>@employee.FirstName @employee.SurName</label>
+                                    </div>
+                                    @foreach (var experienceId in experienceIds)
+                                    {
+                                        Guid? id = EmployeeSelection.Find(x => x.Item1.Equals(employee)).Item1.Experience.GetSkillByGuid(experienceId)?.Id;
+                                        <h5>
+                                            <span class="badge badge-pill badge-light mr-1">
+                                                @EmployeeSelection.Find(x => x.Item1.Equals(employee)).Item1.Experience.GetSkillByGuid(experienceId)?.Name
+                                                @if (employee.Experience.HardSkills.Find(l => l.Item1.Id == id).Item2 != 0)
+                                                {
+                                                    int level = (int) employee.Experience.HardSkills.Find(l => l.Item1.Id == id).Item2;
+                                                    switch (level)
+                                                    {
+                                                        case 1:
+                                                            <span class="badge badge-dark badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 2:
+                                                            <span class="badge badge-secondary badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 3:
+                                                            <span class="badge badge-info badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 4:
+                                                            <span class="badge badge-primary badge-pill ml-1">@level</span>
+                                                            break;
+                                                    }
+                                                }
+                                                @if (employee.Experience.Languages.Find(l => l.Item1.Id == id).Item2 != 0)
+                                                {
+                                                    int level = (int) employee.Experience.Languages.Find(l => l.Item1.Id == id).Item2;
+                                                    switch (level)
+                                                    {
+                                                        case 1:
+                                                            <span class="badge badge-dark badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 2:
+                                                            <span class="badge badge-secondary badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 3:
+                                                            <span class="badge badge-info badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 4:
+                                                            <span class="badge badge-primary badge-pill ml-1">@level</span>
+                                                            break;
+                                                        case 5:
+                                                            <span class="badge badge-success badge-pill ml-1">@level</span>
+                                                            break;
+                                                    }
+                                                }
+                                            </span>
+                                        </h5>
+                                    }
+                                </div>
+                            </li>
+                        }
+                    </div>
+                    <br>
+                    <h4>
+                        @if (Id.ToString() != "00000000-0000-0000-0000-000000000000")
+                        {
+                            <button class="badge badge-pill badge-dark b1" type="button" @onclick="() => AddToOffer(Id)">
+                                Mitarbeiter dem Angebot hinzufügen
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="badge badge-pill badge-dark b1" type="button" href="Angebotsübersicht/Angebot/@Id" @onclick="() => _showModal = true">
+                                Neues Angebot anhand ausgewählter Mitarbeiter erstellen
+                            </button>
+                        }
+                    </h4>
+                </div>
+                <div class="col-sm-3 col-md-3 col-lg-4">
+                    <h4>
+                        Mitarbeiter
+                    </h4>
+                    <div class="row ml-1">
+                        @foreach (var employee in SelectedEmployees.Where(employee => EmployeeSelection.Exists(x => x.Item1.Id.Equals(employee))))
+                        {
+                            const string uncheck = "uncheck";
+                            Employee temp = EmployeeSelection.Find(x => x.Item1.Id.Equals(employee)).Item1;
+                            <h4>
+                                <span class="badge badge-pill badge-light mr-1">
+                                    @temp.FirstName @temp.SurName
+                                    <button class="btn btn-sm rounded-pill" @onclick="() => {_jsRuntime.InvokeVoidAsync(uncheck, temp.UserName); UpdateSelected(temp.Id, false);}">&#10006</button>
+                                </span>
+                            </h4>
+                        }
+                    </div>
+                    <br>
+                    @if (EmployeeSelection.Count > 0 && EmployeeSelection[0].Item2.Count != _searchManager.SelectedExperience.Count())
+                    {
+                        <div class="toast fade show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="mr-auto">Ergebnisbericht</strong>
+                            </div>
+                            <div class="toast-body">
+                                Keiner der gefundenen Mitarbeiter erfüllt alle Kriterien.
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <br>
+        
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>
+
+@if (Id.ToString() == "00000000-0000-0000-0000-000000000000" && _showModal)
+        {
+            <div class="modal fade show" id="createModal" style="display: block; background-color: rgba(10,10,10,.5);">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <EditForm Model="_model" OnValidSubmit="SaveOffer">
+                            <DataAnnotationsValidator/>
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="newOfferModalTitle">Neues Angebot erstellen</h4>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="CloseModal">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <InputText class="col form-control rounded" @bind-Value="@_model.title" placeholder="Angebotsname"/>
+                                <ValidationMessage For="@(() => _model.title)"/>
+                                <!--<form>
+                                    <div class="mb-3">
+                                        <h5><label for="newOffer" class="mb-1">Angebotstitel:</label></h5>
+                                        <input class="form-control mb-2" type="text" id="newOffer" placeholder="" @bind="Offer" @bind:event="onchange">
+                                    </div>
+                                </form>-->
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary">Bestätigen</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal" @onclick="CloseModal">Abbrechen</button>
+                            </div>
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        }

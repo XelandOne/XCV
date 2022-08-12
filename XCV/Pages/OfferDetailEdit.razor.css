@@ -1,0 +1,70 @@
+﻿.button {
+    font-size: large;
+}
+
+.se1{
+    max-height: 15vh;
+}
+
+.cb {
+    padding: 0;
+}
+
+.co1{
+    margin-right: 0;
+    margin-bottom: 0;
+}
+.w{
+    color: red;
+}
+
+.a1 {
+    border-top: 0;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+.b0 {
+    font-size: 1em;
+    padding: 0;
+    margin: 0;
+}
+
+.badge-pill {
+    margin-bottom: 0% ;
+}
+
+.c0 {
+    margin: 0;
+    padding: 0;
+}
+
+.h1 {
+    padding-top: 0;
+    margin-top: 0;
+    padding-right: 0;
+    margin-right: 0;
+}
+
+.r1{
+    padding-top: 0;
+    margin-top: 0;
+    
+}
+
+.i1 {
+    margin-right: 10%;
+    padding-right: 20%;
+}
+
+.c1 {
+    padding-right: 0;
+    padding-top: 0;
+    margin-right: 0;
+    margin-top: 0;
+}
+
+.al0 {
+    font-size: 250px;
+}
+

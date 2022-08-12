@@ -1,0 +1,10 @@
+@page "/LoginFailed"
+
+@inject NavigationManager _navigationManager
+
+<h3>Die angegebenen Zugangsdaten sind ungültig.</h3>
+<hr>
+<br>
+
+<button @onclick="@(() => _navigationManager.NavigateTo("/"))" class="btn btn-outline-secondary rounded-pill">Erneut versuchen</button>
+<button @onclick="@(() =>_navigationManager.NavigateTo("/EmployeeProfileCreation"))" class="btn btn-outline-secondary rounded-pill">Neues Profil erstellen</button>

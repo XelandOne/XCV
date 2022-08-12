@@ -1,0 +1,221 @@
+﻿@page "/Datenbasis"
+@page "/Datenbasis/{ExpandPath?}"
+@using XCV.Services
+@using XCV.Entities.Enums
+
+@inject ExperienceManager _experienceManager
+@inject NavigationManager _navigationManager
+@inject FillExperienceTable _fillExperienceTable
+
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetAdminRolesString()" Context="auth_context">
+    <Authorized>
+        
+        <div class="card p-3">
+            <h2 class="card-title">Datenbasis</h2>
+            <InputFile class="form-control-file text-center m-2" OnChange="OnExperienceJsonUpload" accept="application/json"/>
+            @if (_uploadException)
+            {
+                <div class="alert alert-danger">Es ist ein Fehler beim Upload aufgetreten.</div>
+            }
+            @if (_dataAlreadyLoaded)
+            {
+                <div class="alert alert-danger">Es wurde bereits eine Datenbasis hochgeladen.</div>
+            }
+        <EditForm Model="_experienceModel" OnValidSubmit="SearchHandler">
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Datensatz:</span>
+                </div>
+                <InputText class="col form-control rounded" @bind-Value="_searchRequest"/>
+            </div>
+        </EditForm>
+        
+            <div class="card-body">
+                <RadzenTree Data="@_root" @bind-Value="@_selected" Style="width: 100%; height: 100%">
+                    <RadzenTreeLevel Expanded="@(node => (node as TreeElement)?.Expanded == true)" TextProperty="Name" ChildrenProperty="Children" HasChildren="@(e => (e as TreeElement)?.Children.Any() == true)">
+                        <Template>
+                            <div class="d-inline-flex align-items-center" style="width: 100%" @onclick="@(args => Toggle(context.Value))">
+                                @{
+                                    if ((context.Value as TreeElement) != null)
+                                    {
+                                        
+                                        var element = context.Value as TreeElement;
+                                        if (element?.Parent == null)
+                                        {
+                                            <p >HALLO</p>
+                                        }
+                                        
+                                        //if root then it gets an icon else buttons
+                                        if (element?.Parent == _root)
+                                        {
+                                            switch ((context.Value as TreeElement)?.Name)
+                                            {
+                                                //root gets icon
+                                                case "Hard Skills":
+                                                    <RadzenIcon Icon="code"/>
+                                                    <RadzenLabel Text="@context.Text"/>
+                                                    break;
+                                                case "Soft Skills":
+                                                    <RadzenIcon Icon="emoji_people"/>
+                                                    <RadzenLabel Text="@context.Text"/>
+                                                    <RadzenButton Click="(() =>OnCreate(_current = context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true" Icon="add" Style="margin-left: auto; margin-right: 0;"/>
+                                                    break;
+                                                case "Branchen":
+                                                    <RadzenIcon Icon="engineering"/>
+                                                    <RadzenLabel Text="@context.Text"/>
+                                                    <RadzenButton Click="(() =>OnCreate(_current = context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true" Icon="add" Style="margin-left: auto; margin-right: 0;"/>
+                                                    break;
+                                                case "Rollen":
+                                                    <RadzenIcon Icon="people"/>
+                                                    <RadzenLabel Text="@context.Text"/>
+                                                    <RadzenButton Click="(() =>OnCreate(_current = context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true" Icon="add" Style="margin-left: auto; margin-right: 0;"/>
+                                                    break;
+                                                case "Sprachen":
+                                                    <RadzenIcon Icon="language"/>
+                                                    <RadzenLabel Text="@context.Text"/>
+                                                    <RadzenButton Click="(() =>OnCreate(_current = context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true" Icon="add" Style="margin-left: auto; margin-right: 0;"/>
+                                                    break;
+                                            }
+                                        }
+                                        else if (element?.Children.Any() == false)
+                                        {
+                                            //leaf get buttons
+                                            <RadzenLabel Text="@context.Text"/>
+                                            <RadzenButton Text="Bearbeiten" Style="margin-left: auto; margin-right: 0;" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Success" Icon="edit" Click="(() => OnEdit( context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true"/>
+                                            <RadzenButton Text="Löschen" Style="margin-right: 0;" Size="ButtonSize.Small" ButtonStyle="ButtonStyle.Danger" Icon="edit" Click="(() => OnDelete(context.Value as TreeElement))" @onclick:stopPropagation="true"/>
+                                        }
+                                        else if (element?.Children.Any() == true && element?.Children.TrueForAll(e => e.Children.Any()) == false)
+                                        {
+                                            //category
+                                            <RadzenLabel Text="@context.Text"/>
+                                            <RadzenButton Click="(() =>OnCreate(_current = context.Value as TreeElement ?? new TreeElement()))" @onclick:stopPropagation="true" Icon="add" Style="margin-left: auto; margin-right: 0;"/>
+                                        }
+                                        else
+                                        {
+                                            <RadzenLabel Text="@context.Text"/>
+                                        }
+                                    }
+                                }
+                            </div>
+                        </Template>
+                    </RadzenTreeLevel>
+                </RadzenTree>
+            </div>
+
+        @if (_showEditData)
+        {
+            <div class="modal fade show" id="editModal" style="display: block; background-color: rgba(10,10,10,.5);">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <EditForm Model="_experienceModel" OnValidSubmit="ExpSubmitHandler">
+                            <DataAnnotationsValidator/>
+                            <div class="modal-header">
+                                <h4 class="modal-title">Datensatz bearbeiten</h4>
+                                <button type="button" @onclick="DismissHandler" class="close">&times</button>
+                            </div>
+                            <div class="modal-body">
+                                <InputText class="col form-control rounded" @bind-Value="_experienceModel.Name" placeholder="@_experienceModel.Name"/>
+                                <ValidationMessage For="@(() => _experienceModel.Name)"/>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" @onclick="DismissHandler" class="btn btn-secondary">Cancel</button>
+                                <button type="submit" class="btn btn-primary">Bestätigen</button>
+                            </div>
+
+                        </EditForm>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_showCreateData)
+                {
+                    <div class="modal fade show" id="createModal" style="display: block; background-color: rgba(10,10,10,.5);">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <EditForm Model="_experienceModel" OnValidSubmit="NewExpSubmitHandler">
+                                    <DataAnnotationsValidator/>
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Datensatz hinzufügen</h4>
+                                        <button type="button" @onclick="DismissHandler" class="close">&times</button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <InputText class="col form-control rounded" @bind-Value="_experienceModel.Name" placeholder="@_experienceModel.Name"/>
+                                        <ValidationMessage For="@(() => _experienceModel.Name)"/>
+                                    </div>
+        
+                                    <div class="modal-footer">
+                                        <button type="button" @onclick="DismissHandler" class="btn btn-secondary">Cancel</button>
+                                        <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                                    </div>
+        
+                                </EditForm>
+                            </div>
+                        </div>
+                    </div>
+                }
+            
+        @if (_showError)
+        {
+            <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Fehler</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => _showError = false">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Der Name ist schon vergeben
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        @if (_showNotFound)
+                {
+                    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exampleModalLabel">Nicht enthalten</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => _showNotFound = false">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                                
+        @if (_showCommitDelete)
+        {
+            <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title text-danger" id="exampleModalLabel">Achtung!</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="() => _showCommitDelete = false">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Wollen Sie den Datensatz @_current.Name wirklich löschen?
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal" aria-label="Close" @onclick="OnCommitDelete">
+                                <span aria-hidden="true">Löschen</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        </div>
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

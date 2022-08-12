@@ -1,0 +1,109 @@
+@page "/EmployeeProfileCreation"
+@using XCV.Entities.Enums
+@using XCV.Services
+@using XCV.Data
+
+@inject AuthenticationStateProvider _authenticationStateProvider
+@inject NavigationManager _navigationManager
+@inject EmployeeManager _employeeManager
+@inject IEmployeeService _employeeService
+
+<h3>Neues Profil erstellen</h3>
+<hr>
+
+<div class="row justify-content-center">
+    <div class="card w-50">
+        <div class="card-header">
+            <h4>Ihre Daten</h4>
+        </div>
+        <div class="card-body">
+            <EditForm Model="@_employeeCreationModel" OnValidSubmit="OnCreationSubmit">
+                <DataAnnotationsValidator/>
+                <div class="form-group">
+                    <label for="firstNameInput">Vorname</label>
+                    <div class="input-group">
+                        <InputText id="firstNameInput" class="form-control" @bind-Value="_employeeCreationModel.FirstName" placeholder="Vorname"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.FirstName)" />
+                </div>
+                <div class="form-group">
+                    <label for="surNameInput">Nachname</label>
+                    <div class="input-group">
+                        <InputText id="surNameInput" class="form-control" @bind-Value="_employeeCreationModel.SurName" placeholder="Nachname"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.SurName)" />
+                </div>
+                <div class="form-group">
+                    <label for="usernameInput">Username</label>
+                    <div class="input-group">
+                        <InputText id="usernameInput" class="form-control" @bind-Value="_employeeCreationModel.UserName" placeholder="Username"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.UserName)" />
+                    @if (_usernameAlreadyExists)
+                    {
+                        <small class="form-text">Der Username ist bereits vergeben.</small>
+                    }
+                    </div>
+
+                <div class="form-group">
+                    <label for="employedSinceInput">Angestellt bei dieser Firma seit</label>
+                    <div class="input-group">
+                        <InputDate id="employedSinceInput" class="form-control" @bind-Value="_employeeCreationModel.EmployedSince"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.EmployedSince)" />
+                </div>
+                <div class="form-group">
+                    <label for="workExperienceInput">Jahre der Berufserfahrung vor dieser Firma</label>
+                    <div class="input-group">
+                        <InputNumber id="workExperienceInput" class="form-control" @bind-Value="_employeeCreationModel.WorkExperience" min="0" step="1" placeholder="Jahre Berufserfahrung"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.WorkExperience)" />
+                </div>
+                <div class="form-group">
+                    <label for="scientificAssistantInput">Jahre als Wissenschaftlicher Mitarbeiter</label>
+                    <div class="input-group">
+                        <InputNumber id="scientificAssistantInput" class="form-control" @bind-Value="_employeeCreationModel.ScientificAssistant" min="0" step="1" placeholder="Jahre Wissenschaftlicher Mitarbeiter"/>
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.ScientificAssistant)" />
+                </div>
+                <div class="form-group">
+                    <label for="studentAssistantInput">Jahre als Studentische Hilfskraft</label>
+                    <div class="input-group">
+                        <InputNumber id="studentAssistantInput" class="form-control" @bind-Value="_employeeCreationModel.StudentAssistant" min="0" step="1" placeholder="Jahre Studentische Hilfskraft"/> 
+                    </div>
+                    <ValidationMessage For="@(() => _employeeCreationModel.StudentAssistant)" />
+                </div>
+
+                <div class="form-group">
+                    <label for="authorizationInput">Ihre Rolle</label>
+                    <div class="input-group">
+                        <InputSelect id="authorizationInput" class="custom-select" @bind-Value="_employeeCreationModel.Authorization">
+                            @foreach (var authorization in Enum.GetValues(typeof(Authorizations)))
+                            {
+                                <option value="@authorization">@AuthorizationHelper.ToFriendlyString((Authorizations) authorization)</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _employeeCreationModel.Authorization)" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="studentAssistantInput">Ihr Rate Card Level</label>
+                    <div class="input-group">
+                        <InputSelect class="custom-select" @bind-Value="_employeeCreationModel.RateCardLevel">
+                            @foreach (var rcl in Enum.GetValues(typeof(RateCardLevel)))
+                            {
+                                <option value="@rcl">@RateCardLevelHelper.ToFriendlyString((RateCardLevel) rcl)</option>
+                            }
+                        </InputSelect>
+                        <ValidationMessage For="@(() => _employeeCreationModel.RateCardLevel)" />
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary btn-block"> Erstellen </button>
+                </div>
+            </EditForm>
+        </div>
+    </div>
+</div>

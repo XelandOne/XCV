@@ -1,0 +1,169 @@
+﻿@page "/employeeprofile"
+@using XCV.Services
+@using XCV.Entities.Enums
+
+@inject EmployeeManager _employeeManager
+@inject ProjectManager _projectManager
+@inject AuthenticationStateProvider _authenticationStateProvider
+
+
+<AuthorizeView>
+    <Authorized>
+        @if (_employee != null)
+        {
+            <div class="row">
+                <h2 class="col mt-1">Mitarbeiterprofil&nbsp;</h2>
+                <span class="col">
+                    <button id="logout-button" class="btn btn-info float-right rounded-pill ml-2" @onclick="@OnSignOutClick">Abmelden</button>
+                    <a class="float-right" href="employeeprofile/edit">
+                        <button id="edit-button" class="btn btn-outline-secondary rounded-pill">Bearbeiten</button>
+                    </a>
+                </span>
+            </div>
+            <hr>
+            <div class="row justify-content-center">
+                <div class="card w-50">
+                    <div class="card-header text-center">
+                        @{
+                            string imgSrc;
+                            if (_employee.ProfilePicture == null)
+                            {
+                                imgSrc = "/images/EmployeeImage.png";
+                            }
+                            else
+                            {
+                                var base64 = Convert.ToBase64String(_employee.ProfilePicture);
+                                imgSrc = $"data:image;base64,{base64}";
+                            }
+                        }
+                        <img class="rounded w-25 p-2" src="@imgSrc" alt="Profilbild">
+                        <h4 class="card-title">@_employee.FirstName @_employee.SurName</h4>
+                        <h6 class="card-title">@string.Join(", ", _employee.Experience.Roles.Select(r => r.Name))</h6>
+                        <h5>
+                            <span class="badge badge-info badge-pill">Rate-Card Level: @RateCardLevelHelper.ToFriendlyString(_employee.RateCardLevel)</span>
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                        <div>
+                            <div>
+                                <h5>Sprachen:</h5>
+                                @foreach (var language in _employee.Experience.Languages)
+                                {
+                                    <span class="badge badge-light badge-pill p-2 my-1 mr-1">
+                                        @language.Item1.Name<span style="font-size: smaller" class="badge badge-secondary badge-pill ml-1 p-1">@LanguageLevelHelper.ToFriendlyString(language.Item2)</span>
+                                    </span>
+                                }
+                            </div>
+                            <br>
+                            <div>
+                                <div class="row">
+                                    <h5 class="col-5">Relevante Berufserfahrung:</h5>
+                                    <h5 class="col">@_employee.CalcRelevantWorkExperience() Jahre</h5>
+                                </div>
+                                <div class="ml-2">
+                                    <div class="row">
+                                        <h6 class="col-5">Angestellt bei dieser Firma seit: </h6>
+                                        <h6 class="col">@_employee.EmployedSince.ToShortDateString()</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6 class="col-5">Berufserfahrung vor dieser Firma: </h6>
+                                        <h6 class="col">@_employee.WorkExperience Jahre</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6 class="col-5">Wissenschaftlicher Mitarbeiter: </h6>
+                                        <h6 class="col">@_employee.ScientificAssistant Jahre</h6>
+                                    </div>
+                                    <div class="row">
+                                        <h6 class="col-5">Studentsiche Hilfskraft: </h6>
+                                        <h6 class="col">@_employee.StudentAssistant Jahre</h6>
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <div>
+                                <h5>Branche:</h5>
+                                @foreach (var field in _employee.Experience.Fields)
+                                {
+                                    <span class="badge badge-light badge-pill p-2 my-1 mr-1">@field.Name</span>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+            <br>
+
+            <div class="container">
+                <div class="row">
+                    <div class="col">
+                        <button class="btn dropdown-toggle rounded" data-toggle="collapse" data-target="#collapseHardskills">
+                            <h4 style="display: inline;">Hardskills: &nbsp;</h4>
+                        </button>
+                        <div class="collapse show" id="collapseHardskills">
+                            @foreach (var hardskill in _employee.Experience.HardSkills)
+                            {
+                                <span class="badge badge-light badge-pill p-2 my-1 mr-1">@hardskill.Item1.Name&nbsp;<span style="font-size: smaller" class="badge badge-secondary badge-pill p-1">@HardSkillLevelHelper.ToFriendlyString(hardskill.Item2)</span></span>
+                            }
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col">
+                        <button class="btn dropdown-toggle rounded" data-toggle="collapse" data-target="#collapseSoftskills">
+                            <h4 style="display: inline;">Softskills: &nbsp;</h4>
+                        </button>
+                        <div class="collapse show" id="collapseSoftskills">
+                            @foreach (var softskill in _employee.Experience.SoftSkills)
+                            {
+                                <span class="badge badge-light badge-pill p-2 my-1 mr-1">@softskill.Name</span>
+                            }
+                        </div>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col">
+                        <button class="btn dropdown-toggle rounded" data-toggle="collapse" data-target="#collapseProjects">
+                            <h4 style="display: inline;">Projekte: &nbsp;</h4>
+                        </button>
+                        @if (_employeeProjects != null)
+                        {
+                            <div class="collapse show" id="collapseProjects">
+                            <ul>
+                                @foreach (var project in _employeeProjects)
+                                {
+                                    <li>
+                                        @project.Item2
+                                        <ul>
+                                            @foreach (var activity in _projectActivitiesForProject[project.Item1])
+                                            {
+                                                @if (_employeeManager.CheckEmployeeHasProjectActivities(activity))
+                                                {
+                                                    <li>
+                                                        <small>@activity.Description</small>
+                                                    </li>
+                                                }
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                            </div>
+                        }
+                        else
+                        {
+                            <h6>Projekte werden geladen</h6>
+                        }
+                    </div>
+                    <br>
+                    <br>
+                </div>
+            </div>
+            <br>
+            <br>
+        }
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

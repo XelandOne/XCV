@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
+
+        <IsPackable>false</IsPackable>
+
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <None Include="..\XCV\Files\SQLQuery.sql" Link="Files\SQLQuery.sql" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\EmployeePageTemplate.docx" Link="Files\WordTemplates\EmployeePageTemplate.docx" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\OfferCoverSheet.docx" Link="Files\WordTemplates\OfferCoverSheet.docx" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\OfferCoverSheetDummy.docx" Link="Files\WordTemplates\OfferCoverSheetDummy.docx" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\OfferTemplateDummy.docx" Link="Files\WordTemplates\OfferTemplateDummy.docx" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\OfferExperienceTemplate.docx" Link="Files\WordTemplates\OfferExperienceTemplate.docx" CopyToOutputDirectory="PreserveNewest" />
+      <None Include="..\XCV\Files\WordTemplates\PricesPageTemplate.docx" Link="Files\WordTemplates\PricesPageTemplate.docx" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Moq" Version="4.16.1" />
+        <PackageReference Include="NUnit" Version="3.12.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="Selenium.Firefox.WebDriver" Version="0.27.0" />
+        <PackageReference Include="Selenium.WebDriver" Version="4.0.0-beta4" />
+        <PackageReference Include="Selenium.WebDriver.ChromeDriver" Version="90.0.4430.2400" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\XCV\XCV.csproj" />
+    </ItemGroup>
+
+</Project>

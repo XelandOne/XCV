@@ -1,0 +1,944 @@
+﻿@page "/OfferOverview/Offer/edit/{Id:guid}"
+@page "/OfferOverview/Offer/edit/{Id:guid}/{Failed:bool}"
+@using XCV.Entities.Enums
+@using XCV.Entities
+@using XCV.Services
+@using DocumentFormat.OpenXml.Drawing
+@using DocumentFormat.OpenXml.InkML
+@using System.Globalization
+
+@inject ExperienceManager _experienceManager
+@inject OfferManager _offerManager
+@inject EmployeeManager _employeeManager
+@inject ProjectManager _projectManager
+@inject NavigationManager _navigationManager
+
+<AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+    <Authorized>
+        @if (Failed)
+        {
+            <div class="alert alert-danger" role="alert">
+              Ihre letzte Änderung konnte nicht gespeichert werden, da sie nicht mehr denn aktuellsten Datensatz hatten! <br>
+              Ihre Daten wurden neu geladen.
+            </div>
+        }
+    
+        <div class="row">
+          <span class="col-8 co1">
+            <div class="row">
+              <h3 class="mt-1 ml-3">Bearbeitung von @Offer?.Title</h3>
+              <button class="btn btn-outline-primary rounded-pill ml-3" data-toggle="modal" data-target="#ChangeTitleModal">Titel bearbeiten</button>
+              <div class="modal fade" id="ChangeTitleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModal3Label">Angebotstitel ändern</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label for="newOffer" class="">Angebotstitel:</label>
+                          <input class="form-control mb-2" type="text" id="newOffer" placeholder="Neuer Titel..." @bind="Title" @bind:event="oninput" @onkeydown="async (e) => await Enter(e)">
+                        </div> 
+                      </form>
+                      @if (Title != null && Title.Length > 100)
+                      {
+                        <p class="w">Der Titel darf nicht länger als 100 Zeichen sein!</p>
+                      }
+                      else if (Title != null && Title.Length == 0)
+                      {
+                        <p class="w">Bitte geben Sie einen Titel ein!</p>
+                      }
+                    </div>
+                    <div class="modal-footer">
+                      @if (Title != null && (Title.Length > 100 || Title.Length == 0))
+                      {
+                        <button type="button" class="btn btn-primary" disabled>Bestätigen</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                      }
+                      else
+                      {
+                        <button type="button" class="btn btn-primary" @onclick="() => ChangeTitle()" data-dismiss="modal">Bestätigen</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <!--<button class="btn btn-outline-primary rounded-pill ml-2" data-toggle="modal" data-target="#ChangeDateModal">Start/Ende bearbeiten</button>-->
+            </div>
+            <div class="row co2">
+              @if (Offer != null && Offer.StartDate.HasValue && Offer.EndDate.HasValue)
+              {
+                <small class="ml-3 mt-3">@Offer.StartDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")) - @Offer.EndDate.Value.ToString("d",CultureInfo.CreateSpecificCulture("de-DE"))</small>
+              }
+              else if (Offer != null && Offer.StartDate.HasValue)
+              {
+                <small class="ml-3 mt-3">@Offer.StartDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE")) -  </small> 
+              } 
+              else if (Offer != null && Offer.EndDate.HasValue)
+              {
+                <small class="ml-3 mt-3">  - @Offer.EndDate.Value.ToString("d", CultureInfo.CreateSpecificCulture("de-DE"))</small>
+              }
+              <button class="btn btn-outline-primary rounded-pill ml-2 mt-1" data-toggle="modal" data-target="#ChangeDateModal">Start/Ende bearbeiten</button>
+              <div class="modal fade" id="ChangeDateModal" tabindex="-1" role="dialog" aria-labelledby="exampleModal3Label" aria-hidden="true">
+                <div class="modal-dialog modal-lg" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="exampleModal5Label">Start-/Enddatum bearbeiten</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form>
+                        <div class="mb-3">
+                          <label for="newStartDate" class="">Startdatum:</label>
+                          <input class="form-control mb-2" type="date" id="newStartDate" @bind="StartDate" @bind:event="oninput" @onkeydown="async (e) => await Enter(e)">
+                        </div> 
+                      </form>
+                      <form>
+                        <div class="mb-3">
+                          <label for="newEndDate" class="">Enddatum:</label>
+                          <input class="form-control mb-2" type="date" id="newEndDate" @bind="EndDate" @bind:event="oninput" @onkeydown="async (e) => await Enter(e)">
+                        </div> 
+                      </form>
+                      @if (StartDate != null && EndDate != null && StartDate.HasValue && EndDate.HasValue && StartDate.Value > EndDate.Value)
+                      {
+                        <p class="w">Das Enddatum muss nach dem Startdatum liegen!</p>
+                      }
+                      @if ((EndDate != null && EndDate.HasValue && EndDate.Value >= System.Data.SqlTypes.SqlDateTime.MaxValue.Value) || (StartDate != null && StartDate.HasValue && StartDate.Value >= System.Data.SqlTypes.SqlDateTime.MaxValue.Value))
+                      {
+                        <p class="w">Das eingegebene Datum ist zu groß!</p>
+                      }
+                      @if ((EndDate != null && EndDate.HasValue && EndDate.Value <= System.Data.SqlTypes.SqlDateTime.MinValue.Value) || (StartDate != null && StartDate.HasValue && StartDate.Value <= System.Data.SqlTypes.SqlDateTime.MinValue.Value))
+                      {
+                        <p class="w">Das eingegebene Datum ist zu klein!</p>
+                      }
+                    </div>
+                    <div class="modal-footer">
+                      @if ((StartDate != null && EndDate != null && StartDate.HasValue && EndDate.HasValue && StartDate.Value > EndDate.Value) || ((EndDate != null && EndDate.HasValue && EndDate.Value >= System.Data.SqlTypes.SqlDateTime.MaxValue.Value) || (StartDate != null && StartDate.HasValue && StartDate.Value >= System.Data.SqlTypes.SqlDateTime.MaxValue.Value)) || ((EndDate != null && EndDate.HasValue && EndDate.Value <= System.Data.SqlTypes.SqlDateTime.MinValue.Value) || (StartDate != null && StartDate.HasValue && StartDate.Value <= System.Data.SqlTypes.SqlDateTime.MinValue.Value)))
+                      {
+                        <button type="button" class="btn btn-primary" disabled>Bestätigen</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                      }
+                      else
+                      {
+                      <button type="button" class="btn btn-primary" @onclick="async () => await ChangeDates()" data-dismiss="modal">Bestätigen</button>
+                      <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </span>
+          <span class="col-4">
+            <div class="row justify-content-end">
+              <button class="btn btn-outline-danger rounded-pill" @onclick="() => DeleteOffer()">Löschen</button>
+              <button class="btn btn-outline-success rounded-pill ml-2" @onclick="() => CopyOffer()">Kopieren</button>
+              <a class="ml-4 mr-3" href="OfferOverview/Offer/@Id">
+                <button class="btn btn-outline-dark rounded-pill">Fertigstellen</button>
+              </a>
+            </div>
+          </span>
+        </div>
+        <hr>
+        <br>
+        
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-9 col-md-9 col-lg-8">
+              <h4>
+                Mitarbeiter
+              </h4>
+              <!--<div class="w-100 p-3" style="background-color: #eee;">Width 100%</div>-->
+            <div class="card-deck">
+            @if (Offer != null)
+            {
+              @foreach (var shortEmployee in Offer.ShortEmployees)
+            {
+              var employee = _employeeManager.GetEmployee(shortEmployee.EmployeeId);
+
+              if (employee == null)
+                continue;
+              
+              // Employee emp = _employeeManager.Employees.Find(e => e.Id == employee.EmployeeId);
+
+              <div class="card shadow-sm border-secondary mb-3" style="min-width: 40rem; max-width: 54rem">
+              <div class="card-header h1">
+                <div class="container-fluid">
+                  <div class="row r1">
+                    <div class="col-sm-9 col-md-9 col-lg-8 c0">
+                      <h3 class="card-title mb-1 mt-4">@employee?.FirstName @employee?.SurName</h3>
+                      <h5 class="card-subtitle mt-0 mb-1">
+                        @foreach (var role in shortEmployee.SelectedExperience.Roles)
+                        {
+                          <div class="col pl-0 ml-0 mr-2">
+                            @role.Name
+                          </div>
+                        }
+                      </h5>
+                      <h5>
+                        <span class="badge badge-secondary badge-pill mt-1">Rate-Card Level:
+                          <select value="@shortEmployee.RateCardLevel" class="btn-sm btn-outline-secondary rounded-pill" @onchange="eventArgs => SelectRateCardLevel(eventArgs, shortEmployee.Id)" required>
+                            @foreach (RateCardLevel level in Enum.GetValues(typeof(RateCardLevel)))
+                            {
+                              <option value="@level">@RateCardLevelHelper.ToFriendlyString(level)</option>
+                            }
+                          </select>
+                        </span></h5>
+                      <h5><span class="badge badge-secondary badge-pill ">Geplante wöchentliche Stunden: 
+                        <select value="@shortEmployee.PlannedWeeklyHours.ToString()" class="btn-sm btn-outline-secondary rounded-pill se1" @onchange="eventArgs => SelectPlannedWeeklyHours(eventArgs, shortEmployee.Id)">
+                          @for (int i = 0; i <= 100; i++)
+                          {
+                            <option value=@i.ToString()>@i</option>
+                                                                                                         
+                          }
+                        </select></span></h5>
+                      <h5><span class="badge badge-secondary badge-pill ">Rabatt: 
+                        <select value="@((Math.Round(shortEmployee.Discount*100)).ToString())" class="btn-sm btn-outline-secondary rounded-pill se1" @onchange="eventArgs => SelectDiscount(eventArgs, shortEmployee.Id)">
+                          @for (int i = 0; i <= 100; i++)
+                          {
+                            <option value=@i.ToString()>@i</option>
+                                                                                                                               
+                          }
+                        </select></span></h5>
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-4 c1">
+                      <button type="button" class="close mt-1 mr-2 ml-2 cb" @onclick="() => RemoveShownEmployeeProperties(shortEmployee.Id, Offer.Id)" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                      @{
+                        string imgSrc;
+                        if (employee.ProfilePicture == null)
+                        {
+                          imgSrc = "/images/EmployeeImage.png";
+                        }
+                        else {
+                          var base64 = Convert.ToBase64String(employee.ProfilePicture);
+                          imgSrc = $"data:image;base64,{base64}";
+                        }
+                      }
+                      <img class="rounded w-50 ml-1 mt-4 float-right" style="max-height: 7rem; max-width: 7rem;" src="@imgSrc" alt="Profilbild">
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+              <h5 class="card-title2">Hard Skills</h5>
+              <div class="row ml-1">
+                @foreach (var hardskill in shortEmployee.SelectedExperience.HardSkills)
+                {
+                  int level = (int) hardskill.Item2;
+                  switch (level)
+                  {
+                    case 1:
+                      <h5><span class="badge badge-pill badge-light mr-1">@hardskill.Item1.Name<span class="badge badge-dark badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(hardskill.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 2:
+                      <h5><span class="badge badge-pill badge-light mr-1">@hardskill.Item1.Name<span class="badge badge-secondary badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(hardskill.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 3:
+                      <h5><span class="badge badge-pill badge-light mr-1">@hardskill.Item1.Name<span class="badge badge-info badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(hardskill.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 4:
+                      <h5><span class="badge badge-pill badge-light mr-1">@hardskill.Item1.Name<span class="badge badge-primary badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(hardskill.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#HardskillModal-@(shortEmployee.EmployeeId)"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="HardskillModal-@(shortEmployee.EmployeeId)" tabindex="-1" role="dialog" aria-labelledby=@(new String(shortEmployee.EmployeeId.ToString() + "Hardskill" + "Aria")) aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id=@(new String("Title" + shortEmployee.EmployeeId.ToString()))>Hard Skill hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Hard Skill..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id=@(new String("Text" + shortEmployee.EmployeeId.ToString()))>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var hardSkill in shortEmployee.Experience.HardSkills)
+                                {
+                                  @if (!shortEmployee.SelectedExperience.HardSkills.Exists(h => h.Item1.Equals(hardSkill.Item1)))
+                                  {
+                                    Hid = !IsVisible(hardSkill.Item1.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <!--<input class="form-check-input" type="checkbox" id=@(new String(hardSkill.Item1.Id.ToString() + shortEmployee.EmployeeId.ToString())) @onchange="eventArgs => SelectHardskill(hardSkill, employee.Id, eventArgs.Value)"/>
+                                          <label class="form-check-label" for=@(new String(hardSkill.Item1.Id.ToString() + shortEmployee.EmployeeId.ToString()))>@hardSkill.Item1.Name</label>-->
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectHardskill(hardSkill, shortEmployee.Id, true);}"><h5>@hardSkill.Item1.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <h5 class="card-title2">Soft Skills</h5>
+              <div class="row ml-1">
+                @foreach (var softskill in shortEmployee.SelectedExperience.SoftSkills)
+                {
+                  <h5><span class="badge badge-pill badge-light mr-1">@softskill.Name <button class="btn btn-sm rounded-pill" @onclick="() => {RemoveSelectedExperience(softskill, Offer.Id, shortEmployee.Id);}">&#10006;</button></span></h5>
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1 pb-0">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#SoftskillModal-@(shortEmployee.EmployeeId)"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="SoftskillModal-@(shortEmployee.EmployeeId)" tabindex="-1" role="dialog" aria-labelledby=@(new String(shortEmployee.EmployeeId.ToString() + "Hardskill" + "Aria")) aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id=@(new String("Title" + shortEmployee.EmployeeId.ToString()))>Soft Skill hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Soft Skill..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id=@(new String("Text" + shortEmployee.EmployeeId.ToString()))>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var softSkill in shortEmployee.Experience.SoftSkills)
+                                {
+                                  @if (!shortEmployee.SelectedExperience.SoftSkills.Exists(s => s.Equals(softSkill)))
+                                  {
+                                    Hid = !IsVisible(softSkill.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectSoftskill(softSkill, shortEmployee.Id, true);}"><h5>@softSkill.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <h5 class="card-title2">Sprachen</h5>
+              <div class="row ml-1">
+                @foreach (var language in shortEmployee.SelectedExperience.Languages)
+                {
+                  int level = (int) language.Item2;
+                  switch (level)
+                  {
+                    case 1:
+                      <h5><span class="badge badge-pill badge-light mr-1">@language.Item1.Name<span class="badge badge-dark badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(language.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 2:
+                      <h5><span class="badge badge-pill badge-light mr-1">@language.Item1.Name<span class="badge badge-secondary badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(language.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 3:
+                      <h5><span class="badge badge-pill badge-light mr-1">@language.Item1.Name<span class="badge badge-info badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(language.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 4:
+                      <h5><span class="badge badge-pill badge-light mr-1">@language.Item1.Name<span class="badge badge-primary badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(language.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                    case 5:
+                      <h5><span class="badge badge-pill badge-light mr-1">@language.Item1.Name<span class="badge badge-success badge-pill ml-1">@level</span><button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(language.Item1, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                      break;
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#LanguageModal-@(shortEmployee.EmployeeId)"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="LanguageModal-@(shortEmployee.EmployeeId)" tabindex="-1" role="dialog" aria-labelledby=@(new String(shortEmployee.EmployeeId.ToString() + "Hardskill" + "Aria")) aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id=@(new String("Title" + shortEmployee.EmployeeId.ToString()))>Sprache hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Sprache..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id=@(new String("Text" + shortEmployee.EmployeeId.ToString()))>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var language in shortEmployee.Experience.Languages)
+                                {
+                                  @if (!shortEmployee.SelectedExperience.Languages.Exists(l => l.Item1.Equals(language.Item1)))
+                                  {
+                                    Hid = !IsVisible(language.Item1.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectLanguage(language, shortEmployee.Id, true);}"><h5>@language.Item1.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <h5 class="card-title2">Branchenwissen</h5>
+              <div class="row ml-1">
+                @foreach (var field in shortEmployee.SelectedExperience.Fields)
+                {
+                  <h5><span class="badge badge-pill badge-light mr-1">@field.Name <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveSelectedExperience(field, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#FieldModal-@(shortEmployee.EmployeeId)"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="FieldModal-@(shortEmployee.EmployeeId)" tabindex="-1" role="dialog" aria-labelledby=@(new String(shortEmployee.EmployeeId.ToString() + "Hardskill" + "Aria")) aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id=@(new String("Title" + shortEmployee.EmployeeId.ToString()))>Branche hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Softskill..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id=@(new String("Text" + shortEmployee.EmployeeId.ToString()))>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var field in shortEmployee.Experience.Fields)
+                                {
+                                  @if (!shortEmployee.SelectedExperience.Fields.Exists(f => f.Equals(field)))
+                                  {
+                                    Hid = !IsVisible(field.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectField(field, shortEmployee.Id, true);}"><h5>@field.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <h5 class="card-title2">Projekte</h5>
+              <div class="row ml-1">
+                @foreach (var project in shortEmployee.ProjectIds)
+                {
+                  var proj = _projectManager.Projects.Find(p => p.Id == project);
+                  if (proj != null)
+                  {
+                    <h5><span class="badge badge-pill badge-light mr-1">@proj.Title <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveProjects(project, Offer.Id, shortEmployee.Id); }">&#10006;</button></span></h5>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#ProjectModal-@(shortEmployee.EmployeeId)"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="ProjectModal-@(shortEmployee.EmployeeId)" tabindex="-1" role="dialog" aria-labelledby=@(new String(shortEmployee.EmployeeId.ToString() + "Hardskill" + "Aria")) aria-hidden="true">
+                      <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id=@(new String("Title" + shortEmployee.EmployeeId.ToString()))>Projekt hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Projekt..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id=@(new String("Text" + shortEmployee.EmployeeId.ToString()))>
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @if (Projects.ContainsKey(employee.Id))
+                                {
+                                  @foreach (var pro in Projects[employee.Id])
+                                  {
+                                    @if (!shortEmployee.ProjectIds.Exists(p => p == pro.Item1))
+                                    {
+                                      Hid = !IsVisible(pro.Item2);
+                
+                                      <div class="form-group row" hidden="@Hid">
+                                        <div class="col">
+                                          <div class="form-check">
+                                            <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectProject(pro.Item1, shortEmployee.Id, true);}"><h5>@pro.Item2</h5></button></span></h5>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    }
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              </div>
+              </div>
+            }
+            }
+            
+            <div class="card shadow-sm mb-3 border-secondary text-center" style="min-width: 40rem; max-width: 54rem">
+              <div class="card-header ml-0" style="min-height: 13.5rem">
+                <div class="container-fluid">
+                  <div class="row ml-0">
+                    <div class="col-sm-9 col-md-9 col-lg-8 c0">
+                    </div>
+                    <div class="col-sm-3 col-md-3 col-lg-4 c1">
+                     <!-- <img class="rounded w-50 mt-1 ml-6" src="/images/EmployeeImage.png" alt="Bild nicht vorhanden">-->
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-body">
+                <a type="button" class="btn b2 al0" href="EmployeeSearch/@Id">&#65291;</a>
+              </div>
+            </div>
+            <!--<button type="button" class="btn btn-outline-dark btn-sm ml-3">Mitarbeiter hinzufügen</button>-->
+            </div>
+            </div>
+            <div class="col-sm-3 col-md-3 col-lg-4">
+              <h4>
+                Hard Skills
+              </h4>
+              <div class="row ml-1">
+                @if (Offer != null)
+                {
+                  @foreach (var hardskill in Offer.Experience.HardSkills)
+                  {
+                    <h4>
+                      <span class="badge badge-pill badge-light mr-1">
+                        @hardskill.Item1.Name
+                        <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveExperience(hardskill.Item1, Offer.Id); }">&#10006;</button>
+                      </span>
+                    </h4>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#exampleModalCenter2"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel2">Hard Skill hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Hard Skill..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var hardSkill in _experienceManager.HardSkills)
+                                {
+                                  @if (Offer != null && !Offer.Experience.HardSkills.Exists(h => h.Item1.Equals(hardSkill)))
+                                  {
+                                    Hid = !IsVisible(hardSkill.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => {await SelectHardskillOffer((hardSkill, HardSkillLevel.Expert), true);}"><h5>@hardSkill.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <br>
+              <h4>
+                Soft Skills
+              </h4>
+              <div class="row ml-1">
+                @if (Offer != null)
+                {
+                  @foreach (var softskill in Offer.Experience.SoftSkills)
+                  {
+                    <h4>
+                      <span class="badge badge-pill badge-light mr-1">
+                        @softskill.Name
+                        <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveExperience(softskill, Offer.Id); }">&#10006;</button>
+                      </span>
+                    </h4>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#exampleModalCenter"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel">Soft Skill hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Soft Skill..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon1">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var softSkill in _experienceManager.SoftSkills)
+                                {
+                                  @if (Offer != null && !Offer.Experience.SoftSkills.Exists(s => s.Equals(softSkill)))
+                                  {
+                                    Hid = !IsVisible(softSkill.Name);
+
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => { await SelectSoftskillOffer(softSkill, true) ;}"><h5>@softSkill.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <br>
+              <h4>
+                Sprachen
+              </h4>
+              <div class="row ml-1">
+                @if (Offer != null)
+                {
+                  @foreach (var language in Offer.Experience.Languages)
+                  {
+                    <h4>
+                      <span class="badge badge-pill badge-light mr-1">
+                        @language.Item1.Name
+                        <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveExperience(language.Item1, Offer.Id); }">&#10006;</button>
+                      </span>
+                    </h4>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#exampleModalCenter3"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel3">Sprache hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Sprache..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon3">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var language in _experienceManager.Languages)
+                                {
+                                  @if (Offer != null && !Offer.Experience.Languages.Exists(l => l.Item1.Equals(language)))
+                                  {
+                                    Hid = !IsVisible(language.Name);
+                
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => { await SelectLanguageOffer((language, LanguageLevel.Advanced), true) ;}"><h5>@language.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <br>
+              <h4>
+                Branchen
+              </h4>
+              <div class="row ml-1">
+                @if (Offer != null)
+                {
+                  @foreach (var field in Offer.Experience.Fields)
+                  {
+                    <h4>
+                      <span class="badge badge-pill badge-light mr-1">
+                        @field.Name
+                        <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveExperience(field, Offer.Id); }">&#10006;</button>
+                      </span>
+                    </h4>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#exampleModalCenter4"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel4">Branche hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Branche..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon4">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var field in _experienceManager.Fields)
+                                {
+                                  @if (Offer != null && !Offer.Experience.Fields.Contains(field))
+                                  {
+                                    Hid = !IsVisible(field.Name);
+                                
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => { await SelectFieldOffer(field, true) ;}"><h5>@field.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <br>
+              <h4>
+                Rollen
+              </h4>
+              <div class="row ml-1">
+                @if (Offer != null)
+                {
+                  @foreach (var role in Offer.Experience.Roles)
+                  {
+                    <h4>
+                      <span class="badge badge-pill badge-light mr-1">
+                        @role.Name
+                        <button class="btn btn-sm rounded-pill" @onclick="() => { RemoveExperience(role, Offer.Id); }">&#10006;</button>
+                      </span>
+                    </h4>
+                  }
+                }
+                <h4>
+                  <span class="badge badge-pill badge-light mr-1">
+                    <button class="btn btn-sm rounded-pill b0" data-toggle="modal" data-target="#exampleModalCenter5"><h4 class="mb-1 mt-1">&#43;</h4></button>
+                    <div class="modal fade" id="exampleModalCenter5" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-lg" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalCenterLabel5">Rolle hinzufügen</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="input-group w-100">
+                              <input type="text" class="form-control" placeholder="Rolle..." @bind="Filter" @bind:event="oninput" aria-label="Suche..." aria-describedby="basic-addon1">
+                              <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon5">
+                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                    <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                                  </svg>
+                                </span>
+                              </div>
+                            </div>
+                            <div class="list-group w-100">
+                              <div class="d-flex flex-column list-group-item a1">
+                                @foreach (var role in _experienceManager.Roles)
+                                {
+                                  @if (Offer != null && !Offer.Experience.Roles.Contains(role))
+                                  {
+                                    Hid = !IsVisible(role.Name);
+                                
+                                    <div class="form-group row" hidden="@Hid">
+                                      <div class="col">
+                                        <div class="form-check">
+                                          <h5 class="mb-0"><span class="badge badge-pill badge-light"><button class="btn btn-sm rounded-pill mt-1" @onclick="async _ => { await SelectRoleOffer(role, true) ;}"><h5>@role.Name</h5></button></span></h5>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  }
+                                }
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Abschließen</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </span>
+                </h4>
+              </div>
+              <br>
+              <a type="button" class="btn btn-outline-dark rounded-pill" href="EmployeeSearch/Results/@Id/@true">Starte Suche</a>
+              </div>
+          </div>
+        </div>
+        
+
+    </Authorized>
+    <NotAuthorized>
+        <NoAuthorisation/>
+    </NotAuthorized>
+</AuthorizeView>

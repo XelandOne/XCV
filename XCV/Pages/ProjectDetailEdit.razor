@@ -1,0 +1,219 @@
+﻿@page "/projectdetailedit/{Id:guid}"
+@page "/projectdetailedit/{Id:guid}/{Failed:bool}"
+@using XCV.Entities.Enums
+@using XCV.Services
+
+@inject ProjectManager _projectManager
+@inject EmployeeManager _employeeManager
+@inject ExperienceManager _experienceManager
+@inject NavigationManager _navigationManager
+
+
+<AuthorizeView Context="authorization_context" Roles="@AuthorizationStringBuilder.GetSalesAndAdminRolesString()">
+<Authorized>
+    @if (Failed)
+    {
+        <div class="alert alert-danger" role="alert">
+          Ihre letzte Änderung konnte nicht gespeichert werden, da sie nicht mehr denn aktuellsten Datensatz hatten! <br>
+          Ihre Daten wurden neu geladen.
+        </div>
+    }
+    @if (ProjectCopy != null)
+    {
+        <EditForm Model="@ProjectCopy" OnValidSubmit="OnSubmit">
+            <DataAnnotationsValidator/>
+
+
+            <div class="row">
+                <h3 class="mt-1 ml-3">Projektdetails bearbeiten</h3>
+                <span class="col">
+                    <button type="submit" class="float-right btn btn-outline-success rounded-pill">Bestätigen</button>
+                </span>
+            </div>
+            <hr>
+
+            <div class="row justify-content-center">
+                <div class="card w-50">
+                    <div class="card-header">
+                        <div class="row justify-content-center">
+                            @if (ProjectCopy != null)
+                            {
+                                <InputText class="col-7 form-control rounded" placeholder="Projekttitel" @bind-Value="@ProjectCopy.Title"/>
+                            }
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <ValidationSummary/>
+                        <div>
+                            <div class="d-flex row justify-content-start">
+                                <h5 class="col-3">Laufzeit:</h5>
+                                @if (ProjectCopy != null)
+                                {
+                                    <InputDate class="col form-control rounded mr-1" placeholder="Startdatum" @bind-Value="@ProjectCopy.StartDate"/>
+                                    <InputDate class="col form-control rounded ml-1" placeholder="Enddatum" @bind-Value="@ProjectCopy.EndDate"/>
+                                }
+                            </div>
+                            <br>
+                            <div class="d-flex row justify-content-start">
+                                <h5 class="col-3">Branche:</h5>
+                                <InputSelect class="col form-select rounded custom-select" @bind-Value="FieldIdCopy">
+                                    @foreach (var field in _experienceManager.Fields)
+                                    {
+                                        <option value="@field.Id">@field.Name</option>
+                                    }
+                                </InputSelect>
+                            </div>
+                            <br>
+                            <div class="d-flex row justify-content-start">
+                                <h5 class="col-3">Beschreibung:</h5>
+                                @if (ProjectCopy != null)
+                                {
+                                    <InputTextArea class="col form-control rounded" placeholder="Beschreibung" rows="3" @bind-Value="@ProjectCopy.ProjectDescription"/>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </EditForm>
+    }
+    <br>
+    <div>
+        <h4>Mitarbeiter:</h4>
+        @foreach (var employee in _employeesInProject)
+        {
+            <span class="badge badge-light rounded-pill p-2 my-1 mr-1">
+                <h6>@employee.FirstName @employee.SurName</h6>
+            </span>
+        }
+        <span class="badge badge-light rounded-pill my-1">
+        </span>
+    </div>
+    <br>
+    <div>
+        <h4>Tätigkeiten:</h4>
+        @foreach (var activity in _activitiesCopy)
+        {
+            <span class="badge badge-light rounded my-1 mr-1">
+                <div class="btn-group">
+                    <button type="button" @onclick="() => ModalChangeActivity(activity)" class="btn btn-outline-dark">@activity.Description</button>
+                    <button type="button" @onclick="() => RemoveActivity(activity)" class="btn btn-outline-dark">&times;</button>
+                </div>
+            </span>
+        }
+        <span class="badge badge-light rounded-pill my-1">
+            <button @onclick="() => ModalAddActivity()" class="btn btn-outline-dark rounded-pill">+</button>
+        </span>
+    </div>
+    <br>
+
+    <div class="row">
+
+        <div class="col">
+            <h4>Projektzwecke:</h4>
+
+            @if (ProjectCopy != null)
+            {
+                foreach (var projectPurpose in ProjectCopy.ProjectPurposes)
+                {
+                    <div class="btn-outline-secondary disabled">
+                        <span class="badge badge-light my-1 mr-1">
+                            <div class="btn-group">
+                                <button type="button" @onclick="() => RemovePurpose(projectPurpose)" class="btn btn-outline-dark">&times;</button>
+                                <span class="btn btn-outline-dark">@projectPurpose</span>
+                            </div>
+                        </span>
+                    </div>
+                    
+                }
+
+
+                <span class="badge badge-light rounded-pill my-1">
+                    <button type="button" @onclick="ModalAddPurpose" class="btn btn-outline-dark rounded-pill">+</button>
+                </span>
+            }
+
+        </div>
+    </div>
+
+
+    @if (AddActivityShow && _activityModel != null)
+    {
+        <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <EditForm Model="_activityModel" OnValidSubmit="AddActivity">
+                        <DataAnnotationsValidator/>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Projektaktivität hinzufügen</h4>
+                            <button type="button" @onclick="() => CloseActivityModal()" class="close">&times</button>
+                        </div>
+                        <div class="modal-body">
+                            <InputText class="col form-control rounded" @bind-Value="_activityModel.Name" placeholder="Projektaktivität"/>
+                            <ValidationMessage For="@(() => _activityModel.Name)"/>
+                        </div>
+
+                        <div class="modal-footer">
+                            <button type="button" @onclick="() => CloseActivityModal()" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                        </div>
+
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (AddActivityChange)
+    {
+        <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Projektaktivität ändern:</h4>
+                        <button @onclick="() => CloseActivityModal()" class="close">&times</button>
+                    </div>
+                    <div class="modal-body">
+                        <input class="col form-control rounded" @bind="ProjectActivityInput.Description">
+                    </div>
+                    <div class="modal-footer">
+                        <button @onclick="() => CloseActivityModal()" class="btn btn-secondary">Cancel</button>
+                        <button @onclick="() => ChangeActivity()" class="btn btn-primary">Hinzufügen</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    @if (AddPurposeShow && _purposeModel != null)
+    {
+        <div class="modal fade show" id="myModal" style="display: block; background-color: rgba(10,10,10,.5);">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <EditForm Model="_purposeModel" OnValidSubmit="AddPurpose">
+                        <DataAnnotationsValidator/>
+                        <div class="modal-header">
+                            <h4 class="modal-title">Projektzweck hinzufügen</h4>
+                            <button type="button" @onclick="ClosePurposeModal" class="close">&times</button>
+                        </div>
+                        <div class="modal-body">
+                            <InputText class="col form-control rounded" @bind-Value="_purposeModel.Name" placeholder="Projektzweck.."/>
+                            <ValidationMessage For="@(() => _purposeModel.Name)"/>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" @onclick="ClosePurposeModal" class="btn btn-secondary">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Hinzufügen</button>
+                        </div>
+                    </EditForm>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</Authorized>
+<NotAuthorized>
+    <NoAuthorisation/>
+</NotAuthorized>
+</AuthorizeView>

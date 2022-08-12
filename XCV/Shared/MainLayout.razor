@@ -1,0 +1,49 @@
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using XCV.Services
+@inherits LayoutComponentBase
+
+<div class="page">
+    <div class="sidebar">
+        <NavMenu/>
+    </div>
+
+    <div class="main">
+        <!-- <div class="top-row px-4">
+            <a href="https://docs.microsoft.com/aspnet/" target="_blank">About</a>
+        </div> -->
+
+        <div class="content px-4">
+            @if (_localStorageLoaded)
+            {
+                <CascadingAuthenticationState>
+                    @Body
+                </CascadingAuthenticationState>
+            }
+        </div>
+    </div>
+</div>
+
+@code
+{
+    [Inject]
+    public ProtectedLocalStorage ProtectedLocalStore { get; set; }
+
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private bool _localStorageLoaded;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var currentUserId = await ProtectedLocalStore.GetAsync<string>("username");
+            if (currentUserId.Success && currentUserId.Value != null)
+            {
+                await (AuthenticationStateProvider as CustomAuthStateProvider)!.Login(currentUserId.Value);
+            }
+            _localStorageLoaded = true;
+            StateHasChanged();
+        }
+    }
+}

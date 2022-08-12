@@ -1,0 +1,11 @@
+﻿.list-group-item {
+    padding-bottom: 0;
+}
+
+.list-group > li.list-group-item:first-child {
+    border-top: 0;
+}
+
+.b1 {
+    margin-left: 20%;
+}

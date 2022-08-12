@@ -1,0 +1,138 @@
+@using XCV.Entities.Enums
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">XCV</a>
+    <button class="navbar-toggler" @onclick="ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<CascadingAuthenticationState>
+    <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
+        <ul class="nav flex-column">
+            <AuthorizeView>
+                <Authorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="employeeprofile" Match="NavLinkMatch.All">
+                            <span class="oi oi-person" aria-hidden="true"></span> Profil
+                        </NavLink>
+                    </li>
+                </Authorized>
+                <NotAuthorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/">
+                            <span class="oi oi-person" aria-hidden="true"></span> Login
+                        </NavLink>
+                    </li>
+                </NotAuthorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+                <Authorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/EmployeeSearch">
+                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Suche
+                        </NavLink>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesAndAdminRolesString()">
+                <Authorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="projectoverview">
+                            <span class="oi oi-project" aria-hidde#n="true"></span> Projekte
+                        </NavLink>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="@AuthorizationStringBuilder.GetSalesRolesString()">
+                <Authorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="OfferOverview">
+                            <span class="oi oi-document" aria-hidden="true"></span> Angebote
+                        </NavLink>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+            <AuthorizeView Roles="@AuthorizationStringBuilder.GetAdminRolesString()">
+                <Authorized>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Datenbasis">
+                            <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Datenbasis
+                        </NavLink>
+                    </li>
+                </Authorized>
+            </AuthorizeView>
+        </ul>
+        <!--<div class="card-footer">
+            <img class="w-75" src="images/XITASO_Logo_quer_weiss.png" alt="Das Bild konnte nicht geladen werden...">
+        </div>-->
+    </div>
+
+
+    <!-- <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="">
+                <img src="XCV/XCV/Data/XITASO Logo hoch.svg" width="40" height="40" class="d-inline-block align-top" alt="">
+                XitasoCV
+            </a>
+        
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" @onclick="ToggleNavMenu">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="employeeprofile" Match="NavLinkMatch.All">
+                            <span class="oi oi-person" aria-hidden="true"></span> Profil
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="/Mitarbeitersuche">
+                            <span class="oi oi-magnifying-glass" aria-hidden="true"></span> Suche
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="projectoverview">
+                            <span class="oi oi-project" aria-hidde#n="true"></span> Projekte
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="Angebotsübersicht">
+                            <span class="oi oi-document" aria-hidden="true"></span> Angebote
+                        </NavLink>
+                    </li>
+                    <li class="nav-item px-3">
+                        <NavLink class="nav-link" href="#">
+                            <span class="oi oi-data-transfer-download" aria-hidden="true"></span> Datenbasis
+                        </NavLink>
+                    </li>
+                </ul>
+                <div class="card-footer">
+                    <img class="w-75" src="images/XITASO_Logo_quer_weiss.png" alt="Das Bild konnte nicht geladen werden...">
+                </div>
+            </div>
+        </div>
+    </nav> -->
+</CascadingAuthenticationState>
+
+@code {
+
+    [Inject]
+    public AuthenticationStateProvider AuthenticationStateProvider { get; set; }
+
+    private bool _collapseNavMenu = true;
+
+    private string NavMenuCssClass => _collapseNavMenu ? "collapse" : null;
+
+    private void ToggleNavMenu()
+    {
+        _collapseNavMenu = !_collapseNavMenu;
+    }
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        AuthenticationStateProvider.AuthenticationStateChanged += delegate(Task<AuthenticationState> task) { StateHasChanged(); };
+    }
+
+}

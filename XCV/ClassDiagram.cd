@@ -1,0 +1,633 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Class Name="XCV.Data.EmployeeService" BaseTypeListCollapsed="true">
+    <Position X="6" Y="29.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAgAAABACAAFAAAAAAAAAIAAAAgBAABAQ=</HashCode>
+      <FileName>Data\EmployeeService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.ExperienceService" BaseTypeListCollapsed="true">
+    <Position X="35.5" Y="32" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAFAQAAAEAAIAAAAAAAIAAAAAAAAAQAQ=</HashCode>
+      <FileName>Data\ExperienceService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.ProjectActivityService" BaseTypeListCollapsed="true">
+    <Position X="22" Y="29.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAQAQAAAAAAAAAAAAAABAAAQ=</HashCode>
+      <FileName>Data\ProjectActivityService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.ProjectService" BaseTypeListCollapsed="true">
+    <Position X="19.5" Y="31" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAABAgEAAAAAAAAAAgAIAAAIAAQ=</HashCode>
+      <FileName>Data\ProjectService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.332" />
+  </Class>
+  <Class Name="XCV.Data.ShownEmployeePropertiesService" BaseTypeListCollapsed="true">
+    <Position X="1" Y="29" Width="4.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAgAEAAQgAY=</HashCode>
+      <FileName>Data\ShownEmployeePropertiesService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Services.CustomAuthStateProvider">
+    <Position X="2.25" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAABAAAoAAAAAAAAAAAAQBAAAAAA=</HashCode>
+      <FileName>Services\CustomAuthStateProvider.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.DatabaseUtils">
+    <Position X="51.75" Y="9.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAACEAAAACCAA=</HashCode>
+      <FileName>Services\DatabaseUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.EmployeeManager">
+    <Position X="4.25" Y="18.5" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>EAKAwCQADADAgCAAhAmQAEUACAAAgEQoEAAAEAQIAAQ=</HashCode>
+      <FileName>Services\EmployeeManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="EmployeeService" />
+      <Property Name="ProjectManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Services.ExperienceManager">
+    <Position X="34.75" Y="23.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAgAAACAQAAFAEAAAAAgEAIgAAAgAAAAAAAAAAgAA=</HashCode>
+      <FileName>Services\ExperienceManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ExperienceService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Services.FillDummyData">
+    <Position X="59.75" Y="7.5" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>QAAAoBBAJgAAAIAAACIAAAACEAAAAAAAQgBAEAAgAAA=</HashCode>
+      <FileName>Services\FillDummyData.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.FillExperienceTable">
+    <Position X="56.25" Y="9" Width="3" />
+    <NestedTypes>
+      <Delegate Name="XCV.Services.FillExperienceTable.JsonCreeperCallback" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Services\FillExperienceTable.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAABAAAEAAAAAAAAAAgAAAAAACAQAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\FillExperienceTable.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.OfferManager">
+    <Position X="13.5" Y="23" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAIA4AAADBCQAAEIAJAAAAkCABCAgBRiAAoAAABAAQA=</HashCode>
+      <FileName>Services\OfferManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OfferService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Services.ProjectManager">
+    <Position X="19.25" Y="23.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AACIgAAAIAABABAAAAABAAEQEAAAhAAAAkAIJgBAAQA=</HashCode>
+      <FileName>Services\ProjectManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="ProjectService" />
+      <Property Name="ProjectActivityService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Services.SearchManager">
+    <Position X="28.5" Y="23.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>CAgABBAEABAAAAAACCIAAAAAAAAAgAIAAAAAAAAAAEA=</HashCode>
+      <FileName>Services\SearchManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.WordDocumentGenerationService" BaseTypeListCollapsed="true">
+    <Position X="48" Y="21" Width="4.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAQAgAAgQIEBACgQAAAIIMAACAEAAAAQBAAAIQQBA=</HashCode>
+      <FileName>Services\WordDocumentGenerationService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_hourlyWagesService" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Services.ConfiguredEmployee">
+    <Position X="36.75" Y="49" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAABAQgAIAAAEAAAAAAABAAAABgAAAIABQwA=</HashCode>
+      <FileName>Services\WordDocumentGenerationService.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Experience" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Projects" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="XCV.Entities.Enums.AuthorizationStringBuilder">
+    <Position X="42.25" Y="1.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAA=</HashCode>
+      <FileName>Entities\Enums\Authorizations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.DocumentConfiguration">
+    <Position X="8.75" Y="48" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABAFAAgAAAAAAAAAAAAIAAAAAAggAAAgA=</HashCode>
+      <FileName>Entities\DocumentConfiguration.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.Employee" BaseTypeListCollapsed="true">
+    <Position X="22.5" Y="44" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>BAACAEAAIABAQAAAgAEEBABAAAACAIoABQAAAAAAQAA=</HashCode>
+      <FileName>Entities\Employee.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Authorizations" />
+      <Property Name="RateCardLevel" />
+      <Property Name="Experience" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.Experience">
+    <Position X="26.5" Y="51" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAgAAABAQAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Experience.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Entities.Field">
+    <Position X="24.5" Y="54" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Field.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.HardSkill">
+    <Position X="26.75" Y="54" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAAAAAAAAAAAAAgAAAAAAAAAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\HardSkill.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Entities.Language">
+    <Position X="31.25" Y="54" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Language.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.Offer" BaseTypeListCollapsed="true">
+    <Position X="13" Y="44.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAAAAAEAFgEAABAAgAAAAAIAAAAAAAEAAQAA=</HashCode>
+      <FileName>Entities\Offer.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Experience" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="ShortEmployees" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.Project" BaseTypeListCollapsed="true">
+    <Position X="30.75" Y="43" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAQAEQQgAAABAAgAIAAAIAACABAAEAAgAA=</HashCode>
+      <FileName>Entities\Project.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="ProjectActivities" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.ProjectActivity" BaseTypeListCollapsed="true">
+    <Position X="30" Y="47.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAEAAAAIgAAAAgACAAAAAAAAAAIAAIAAEAAAAAAA=</HashCode>
+      <FileName>Entities\ProjectActivity.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.Role">
+    <Position X="22.25" Y="54" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Role.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.ShownEmployeeProperties" BaseTypeListCollapsed="true">
+    <Position X="18.75" Y="44.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAABQAAIiAAABAAAAAACAIAAAgAAAAACQgA=</HashCode>
+      <FileName>Entities\ShownEmployeeProperties.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="RateCardLevel" />
+      <Property Name="Experience" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Entities.SoftSkill">
+    <Position X="29" Y="54" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\SoftSkill.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.UsedExperience" BaseTypeListCollapsed="true">
+    <Position X="19" Y="49.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAACAQAAAAAgAAAAAIAAgAAAIAAAAAAAAAAgAA=</HashCode>
+      <FileName>Entities\UsedExperience.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Fields" />
+      <Property Name="Roles" />
+      <Property Name="SoftSkills" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="XCV.Pages.EmployeeProfile">
+    <Position X="8.5" Y="8.75" Width="2.5" />
+    <InheritanceLine Type="Microsoft.AspNetCore.Components.ComponentBase" FixedToPoint="true">
+      <Path>
+        <Point X="13" Y="2.562" />
+        <Point X="13" Y="8.375" />
+        <Point X="8.708" Y="8.375" />
+        <Point X="8.708" Y="8.75" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAABAAAAAAAAAAQAAEAAAAACAAAAAAQAAAA=</HashCode>
+      <FileName>Pages\EmployeeProfile.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.EmployeeSearch">
+    <Position X="29" Y="6.25" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAEAAAAEAAAACIAAAAAABAAAAACCAAAAAAAAAA=</HashCode>
+      <FileName>Pages\EmployeeSearch.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.EmployeeSearchResults">
+    <Position X="28.5" Y="10" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAACAAAAQEAAAAAIAAAAAABAAAAACAAAQGAAAAEA=</HashCode>
+      <FileName>Pages\EmployeeSearchResults.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.Index">
+    <Position X="7.75" Y="0.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAAAIAgAAAAAAQMAAIgIAACEAAAAABAAAAAAAAA=</HashCode>
+      <FileName>Pages\Index.razor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="_authenticationStateProvider" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Pages.SignInModel">
+    <Position X="1" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAQAAAAAAA=</HashCode>
+      <FileName>Pages\Index.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.OfferDetail">
+    <Position X="13.75" Y="10.25" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAQAAAAAAAAAAAAAAAAAgACAAAAAAAAAAA=</HashCode>
+      <FileName>Pages\OfferDetail.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.OfferDetailEdit">
+    <Position X="14" Y="13.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>QAACAgQAJgAQEEEAAAICABggABSEAASCgRoEAEAAAYA=</HashCode>
+      <FileName>Pages\OfferDetailEdit.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.OfferOverview">
+    <Position X="14.75" Y="6" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAACAAEAABQQAAAAAAIAAAAAAAQAAAACABAgCAAAAAA=</HashCode>
+      <FileName>Pages\OfferOverview.razor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="OfferManager" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Pages.ProjectOverview">
+    <Position X="22" Y="6" Width="2.25" />
+    <InheritanceLine Type="Microsoft.AspNetCore.Components.ComponentBase" FixedToPoint="true">
+      <Path>
+        <Point X="13" Y="2.562" />
+        <Point X="13" Y="5.5" />
+        <Point X="21.542" Y="5.5" Type="JumpStart" />
+        <Point X="21.708" Y="5.5" Type="JumpEnd" />
+        <Point X="23.062" Y="5.5" />
+        <Point X="23.062" Y="6" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAACEAAAAAAACAAAgEAAAQAAAACABAABAABgQA=</HashCode>
+      <FileName>Pages\ProjectOverview.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.Enums.AuthorizationHelper">
+    <Position X="26.75" Y="41.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAA=</HashCode>
+      <FileName>Entities\Enums\Authorizations.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.Enums.LanguageLevelHelper">
+    <Position X="31.5" Y="58" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAA=</HashCode>
+      <FileName>Entities\Enums\LanguageLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Entities.Enums.HardSkillLevelHelper">
+    <Position X="26" Y="58" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAABAA=</HashCode>
+      <FileName>Entities\Enums\HardSkillLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Data.DocumentConfigurationService" BaseTypeListCollapsed="true">
+    <Position X="42.25" Y="30" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAACACAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Data\DocumentConfigurationService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.DummyHourlyWagesService" BaseTypeListCollapsed="true">
+    <Position X="48.25" Y="30.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAQAAAEAAEAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\DummyHourlyWagesService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.HourlyWagesService" BaseTypeListCollapsed="true">
+    <Position X="50.75" Y="30" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAEAQAAAAAAAAAAAAAAAAAAQ=</HashCode>
+      <FileName>Data\HourlyWagesService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Data.OfferService" BaseTypeListCollapsed="true">
+    <Position X="13.5" Y="33" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAABIAABAAABCAAAAAABAAAAQ=</HashCode>
+      <FileName>Data\OfferService.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="XCV.Entities.Enums.RateCardLevelHelper">
+    <Position X="17.25" Y="40.75" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAA=</HashCode>
+      <FileName>Entities\Enums\RateCardLevel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.InputModels.EmployeeCreationModel">
+    <Position X="0.5" Y="11.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>BAAAAEAAIABAQAAAIAAEAABAAAAAAAoABQAAAAAAAAA=</HashCode>
+      <FileName>InputModels\EmployeeCreationModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.DocumentConfigurationDetail">
+    <Position X="40.25" Y="10.25" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAEAAQRAEEAAAAAACABAAAEAAACgAAEAAAAAIA=</HashCode>
+      <FileName>Pages\DocumentConfigurationDetail.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.DocumentConfigurationOverview">
+    <Position X="40.25" Y="6" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAARQAECAAAIAAAAAACAAAAACAAAAAAAAAAA=</HashCode>
+      <FileName>Pages\DocumentConfigurationOverview.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.EmployeeProfileCreation">
+    <Position X="4" Y="8.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAIAAACAIAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Pages\EmployeeProfileCreation.razor.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_employeeCreationModel" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.Pages.EmployeeProfileEdit">
+    <Position X="8.25" Y="12.25" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>iAlAkDAEAECVYACgyDBAHEWwIARQEAACCAQwACIBkCA=</HashCode>
+      <FileName>Pages\EmployeeProfileEdit.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.ExperienceDatabase">
+    <Position X="34.75" Y="6.25" Width="2.75" />
+    <NestedTypes>
+      <Class Name="XCV.Pages.ExperienceDatabase.TreeElement" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Pages\ExperienceDatabase.razor.cs</NewMemberFileName>
+        </TypeIdentifier>
+        <Lollipop Position="0.2" />
+      </Class>
+      <Class Name="XCV.Pages.ExperienceDatabase.ExperienceModel" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Pages\ExperienceDatabase.razor.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAACQQAAAA4CIQAHIAACACCRECAAAABTGAgAg=</HashCode>
+      <FileName>Pages\ExperienceDatabase.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.ProjectDetail">
+    <Position X="22" Y="10.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAACAAAAAAAAAAAAAAAACAAAAAAAAAACABAAAAAgAAA=</HashCode>
+      <FileName>Pages\ProjectDetail.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Pages.ProjectDetailEdit">
+    <Position X="22" Y="13.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAgCAEAAmhKQAAAAIEAEDECAAAQKAQACABIAAAAABAA=</HashCode>
+      <FileName>Pages\ProjectDetailEdit.razor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.Services.DocumentConfigurationManager">
+    <Position X="40.25" Y="21.75" Width="3.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAAAAAAAAAAAAIAAAAAECACAAAAAAgAAAAAA=</HashCode>
+      <FileName>Services\DocumentConfigurationManager.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="DocumentConfigurationService" />
+      <Property Name="OfferService" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="XCV.ValidationAttributes.SqlInjectionValidationAttribute">
+    <Position X="49.25" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ValidationAttributes\SqlInjectionValidationAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="XCV.ValidationAttributes.UniqueUsernameAttribute">
+    <Position X="51.75" Y="1.75" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ValidationAttributes\UniqueUsernameAttribute.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider" Collapsed="true">
+    <Position X="4.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="Microsoft.AspNetCore.Components.ComponentBase" Collapsed="true">
+    <Position X="12.25" Y="2" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Interface Name="XCV.Data.IEmployeeService">
+    <Position X="6.25" Y="27" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAIAgAAABACAAEAAAAAAAAAIAAAAgAAABAA=</HashCode>
+      <FileName>Data\IEmployeeService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IExperienceService">
+    <Position X="35.5" Y="29.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAgAAFAQAAAEAAIAAAAAAAIAAAAAAAAAQAA=</HashCode>
+      <FileName>Data\IExperienceService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IOfferService">
+    <Position X="13.75" Y="30.75" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAABAAAAAAAAAAAAAAAABAAABCAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\IOfferService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IProjectActivityService">
+    <Position X="22.75" Y="27.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAACAAAAAAAAAAQAQAAAAAAAAAAAAAABAAAA=</HashCode>
+      <FileName>Data\IProjectActivityService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IProjectService">
+    <Position X="20" Y="28.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAAAAAAAAAAAABAgAAAAAAAAAAAgAIAAAIAAA=</HashCode>
+      <FileName>Data\IProjectService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IShownEmployeePropertiesService">
+    <Position X="1.25" Y="26.75" Width="4" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAEAAAAAAAAAAAAAAAAAAAAAgAAAAAgAA=</HashCode>
+      <FileName>Data\IShownEmployeePropertiesService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Services.IDocumentGenerationService">
+    <Position X="48.5" Y="19.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Services\IDocumentGenerationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IDocumentConfigurationService">
+    <Position X="42.75" Y="28.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAIAAAAAACACAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\IDocumentConfigurationService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Interface Name="XCV.Data.IHourlyWagesService">
+    <Position X="48.75" Y="28.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAEAAEAQAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Data\IHourlyWagesService.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Enum Name="XCV.Entities.Enums.HardSkillLevel">
+    <Position X="26.75" Y="56.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAQAAAAAABAAAEAAAgAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Enums\HardSkillLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XCV.Entities.Enums.LanguageLevel">
+    <Position X="31.75" Y="55.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAABAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAACAAQ=</HashCode>
+      <FileName>Entities\Enums\LanguageLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XCV.Entities.Enums.RateCardLevel">
+    <Position X="21.5" Y="40.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Enums\RateCardLevel.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XCV.Entities.Enums.Authorizations">
+    <Position X="24.75" Y="41.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAADQAAAAAAAAAQAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Enums\Authorizations.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="XCV.Entities.Enums.DataBaseResult">
+    <Position X="56" Y="12.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAAQBAAAAAAAAA=</HashCode>
+      <FileName>Entities\Enums\DataBaseResult.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
